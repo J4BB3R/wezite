@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "118299797124",
+    "firebase_url": "https://wezite-1541600198401.firebaseio.com",
+    "project_id": "wezite-1541600198401",
+    "storage_bucket": "wezite-1541600198401.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:118299797124:android:7f0788d0ae9b49e0",
+        "android_client_info": {
+          "package_name": "ca.wezite.wezite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "118299797124-r76a9hctk072tu1nqo9rabmj13o7hr5o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.wezite.wezite",
+            "certificate_hash": "047c18c5d984bcdd494ac6ea1244674824324af1"
+          }
+        },
+        {
+          "client_id": "118299797124-e9t7ovn0cb5fa15gp4tt2ocokvuflosc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhttgEgCg4VAkBYMLDRq6eFBnaOmyPlSY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "118299797124-e9t7ovn0cb5fa15gp4tt2ocokvuflosc.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
