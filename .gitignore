@@ -8,3 +8,11 @@
 /build
 /captures
 .externalNativeBuild
+.idea/vcs.xml
+firebase/functions/node_modules/*
+
+firebase/\.vscode/
+
+firebase/node_modules/
+
+\.idea/
