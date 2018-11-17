@@ -24,4 +24,11 @@ public class PointParcours {
     public void setyCoord(String yCoord) {
         this.yCoord = yCoord;
     }
+
+    public PointParcours(String xCoord, String yCoord) {
+        this.xCoord = xCoord;
+        this.yCoord = yCoord;
+    }
+
+
 }
