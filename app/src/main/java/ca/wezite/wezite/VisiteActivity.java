@@ -34,8 +34,11 @@ import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.PointDinteret;
 import ca.wezite.wezite.model.PointParcours;
 import ca.wezite.wezite.utils.Constantes;
+import ca.wezite.wezite.utils.WeziteBoot;
 
 public class VisiteActivity extends FragmentActivity implements OnMapReadyCallback {
+
+    private WeziteBoot mWeziteboot;
 
     private GoogleMap mMap;
 
@@ -56,7 +59,10 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         ParcoursAsyncCreator directionsReader =new ParcoursAsyncCreator();
-//        directionsReader.execute();
+        // directionsReader.execute();
+
+        mWeziteboot = new WeziteBoot();
+        mWeziteboot.checkFirebaseAuth(this, findViewById(R.id.map)); // DO NOT FORGET PLZZZ
 
          mDatabase =  FirebaseDatabase.getInstance().getReference();
          pointsDInteretsCloudEndPoint = mDatabase.child("pointDInterets");
@@ -90,6 +96,12 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mWeziteboot.addDeconnectionListener();
     }
 
     private void drawPrimaryLinePath( List<PointParcours> listLocsToDraw ) {
