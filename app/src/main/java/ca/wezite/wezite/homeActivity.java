@@ -1,5 +1,6 @@
 package ca.wezite.wezite;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -28,8 +29,8 @@ public class homeActivity extends AppCompatActivity implements NavigationView.On
         mDrawer.addDrawerListener(mMenu);
         mMenu.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
 
@@ -46,13 +47,12 @@ public class homeActivity extends AppCompatActivity implements NavigationView.On
         switch (id) {
             case R.id.nav_profile:
                 Toast.makeText(this, "Profile", Toast.LENGTH_LONG).show();
-                setContentView(R.layout.activity_parcours_list);
                 break;
             case R.id.nav_add_place:
                 Toast.makeText(this, "Add Place", Toast.LENGTH_LONG).show();
                 break;
             case R.id.nav_parcours:
-                Toast.makeText(this, "Parcours", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(homeActivity.this, parcoursListActivity.class ));
                 break;
             case R.id.nav_settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();
@@ -61,7 +61,7 @@ public class homeActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(this, "Deconnexion", Toast.LENGTH_LONG).show();
                 break;
         }
-        return super.onOptionsItemSelected(menuItem);
+        return false;
     }
 }
 
