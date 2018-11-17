@@ -15,7 +15,9 @@ public class Parcours {
 
     private String name;
 
-    //private List<PointParcours> listePoints;
+    private List<PointParcours> listePoints;
+
+    private List<String> listIdPointsInterets;
 
     public String getId() {
         return id;
@@ -33,11 +35,19 @@ public class Parcours {
         this.name = name;
     }
 
-//    public List<PointParcours> getListePoints() {
-//        return listePoints;
-//    }
-//
-//    public void setListePoints(List<PointParcours> listePoints) {
-//        this.listePoints = listePoints;
-//    }
+    public List<PointParcours> getListePoints() {
+        return listePoints;
+    }
+
+    public void setListePoints(List<PointParcours> listePoints) {
+        this.listePoints = listePoints;
+    }
+
+    public List<String> getListIdPointsInterets() {
+        return listIdPointsInterets;
+    }
+
+    public void setListIdPointsInterets(List<String> listIdPointsInterets) {
+        this.listIdPointsInterets = listIdPointsInterets;
+    }
 }

@@ -7,20 +7,16 @@ import android.graphics.Color;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -29,14 +25,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.wezite.wezite.dev.InitData;
+import ca.wezite.wezite.async.ParcoursAsyncCreator;
 import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.PointDinteret;
+import ca.wezite.wezite.model.PointParcours;
 import ca.wezite.wezite.utils.Constantes;
 
 public class VisiteActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -44,6 +40,7 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
     private GoogleMap mMap;
 
     private DatabaseReference mDatabase;
+    private DatabaseReference pointsDInteretsCloudEndPoint;
     private DatabaseReference parcoursCloudEndPoint;
 
 
@@ -58,23 +55,18 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        /*InitData.initParcours();
-        InitData.initPointsDinterets();*/
+        ParcoursAsyncCreator directionsReader =new ParcoursAsyncCreator();
+//        directionsReader.execute();
 
          mDatabase =  FirebaseDatabase.getInstance().getReference();
-         parcoursCloudEndPoint = mDatabase.child("pointDInterets");
+         pointsDInteretsCloudEndPoint = mDatabase.child("pointDInterets");
+         parcoursCloudEndPoint = mDatabase.child("parcours/histoire");
 
         parcoursCloudEndPoint.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot noteSnapshot: dataSnapshot.getChildren()){
-                    PointDinteret pointDInteret = noteSnapshot.getValue(PointDinteret.class);
-
-                    LatLng point1 = new LatLng(Double.valueOf(pointDInteret.getxCoord()), Double.valueOf(pointDInteret.getyCoord()));
-                    if(mMap!=null && pointDInteret!=null) mMap.addMarker(new MarkerOptions().position(point1).title(pointDInteret.getNom()));
-                }
-//                PointDinteret post = dataSnapshot.getValue(PointDinteret.class);
-//
+                Parcours parcours = dataSnapshot.getValue(Parcours.class);
+                drawPrimaryLinePath(parcours.getListePoints());
             }
 
             @Override
@@ -83,50 +75,42 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
             }
         });
 
+        pointsDInteretsCloudEndPoint.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot noteSnapshot: dataSnapshot.getChildren()){
+                    PointDinteret pointDInteret = noteSnapshot.getValue(PointDinteret.class);
+                    LatLng point1 = new LatLng(Double.valueOf(pointDInteret.getxCoord()), Double.valueOf(pointDInteret.getyCoord()));
+                    if(mMap!=null && pointDInteret!=null) mMap.addMarker(new MarkerOptions().position(point1).title(pointDInteret.getNom()));
+                }
 
-
-
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
-
-  /*  private void drawPrimaryLinePath( ArrayList<Location> listLocsToDraw )
-    {
-        if ( mMap == null )
-        {
+    private void drawPrimaryLinePath( List<PointParcours> listLocsToDraw ) {
+        if ( mMap == null ) {
             return;
         }
-
-        if ( listLocsToDraw.size() < 2 )
-        {
+        if ( listLocsToDraw.size() < 2 ) {
             return;
         }
 
         PolylineOptions options = new PolylineOptions();
-
         options.color( Color.parseColor( "#CC0000FF" ) );
-        options.width( 5 );
-        options.visible( true );
+        options.width(12);
+        options.visible(true);
 
-        for ( Location locRecorded : listLocsToDraw )
-        {
-
-            options.add( new LatLng( locRecorded.getLatitude(),
-                    locRecorded.getLongitude() ) );
+        for ( PointParcours pointParcours : listLocsToDraw ) {
+            options.add( new LatLng( Double.parseDouble(pointParcours.getxCoord()),
+                    Double.parseDouble(pointParcours.getyCoord()) ) );
         }
-
         mMap.addPolyline( options );
-
-    }*/
+    }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
