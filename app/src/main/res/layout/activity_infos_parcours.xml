@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_demarrage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+
+    <TextView
+        android:id="@+id/titreP"
+        android:layout_width="379dp"
+        android:layout_height="42dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="10dp"
+        android:paddingBottom="5dp"
+        android:gravity="center"
+        android:text="Titre du parcours" />
+
+
+            <ImageView
+                android:id="@+id/imageP"
+                android:layout_width="208dp"
+                android:layout_height="130dp"
+                android:layout_marginRight="7dp"
+                android:layout_below="@+id/titreP"
+                app:srcCompat="@color/colorPrimary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_toRightOf="@+id/imageP"
+                android:layout_below="@+id/titreP"
+                android:text="Type: X \nDurée: X h X min \nDistance: X km"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/imageP"
+                android:layout_marginTop="10dp"
+                android:text="Description"/>
+</RelativeLayout>
