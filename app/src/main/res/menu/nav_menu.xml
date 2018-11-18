@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nav_menu">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/id_black_18dp"
+            android:title="@string/profil" />
+        <item
+            android:id="@+id/nav_parcours"
+            android:icon="@drawable/timeline_black_18dp"
+            android:title="@string/parcours" />
+        <item
+            android:id="@+id/nav_add_place"
+            android:icon="@drawable/add_location_black_18dp"
+            android:title="@string/ajoute" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/settings_black_18dp"
+            android:title="@string/params" />
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/power_settings_new_black_18dp"
+            android:title="@string/deconn" />
+    </group>
+</menu>
