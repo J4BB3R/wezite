@@ -43,8 +43,11 @@ import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.PointDinteret;
 import ca.wezite.wezite.model.PointParcours;
 import ca.wezite.wezite.utils.Constantes;
+import ca.wezite.wezite.utils.WeziteBoot;
 
 public class VisiteActivity extends FragmentActivity implements OnMapReadyCallback, LocationListener {
+
+    private WeziteBoot mWeziteboot;
 
     private GoogleMap mMap;
 
@@ -68,49 +71,57 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        ParcoursAsyncCreator parcoursAsyncCreator = new ParcoursAsyncCreator();
-        parcoursAsyncCreator.execute();
+        ParcoursAsyncCreator directionsReader =new ParcoursAsyncCreator();
+        // directionsReader.execute();
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-        pointsDInteretsCloudEndPoint = mDatabase.child("pointDInterets");
-        parcoursCloudEndPoint = mDatabase.child("parcours/" + "histoire");
-        this.locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        mWeziteboot = new WeziteBoot();
+        mWeziteboot.checkFirebaseAuth(this, findViewById(R.id.map)); // DO NOT FORGET PLZZZ
 
-//        parcoursCloudEndPoint.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Parcours parcours = dataSnapshot.getValue(Parcours.class);
-//                drawPrimaryLinePath(parcours.getListePoints());
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.out.println("The read failed: " + databaseError.getCode());
-//            }
-//        });
-//
-//        pointsDInteretsCloudEndPoint.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
-//                    PointDinteret pointDInteret = noteSnapshot.getValue(PointDinteret.class);
-//                    LatLng point1 = new LatLng(Double.valueOf(pointDInteret.getxCoord()), Double.valueOf(pointDInteret.getyCoord()));
-//                    if (mMap != null && pointDInteret != null)
-//                        mMap.addMarker(new MarkerOptions().position(point1).title(pointDInteret.getNom()));
-//                    pointDinteretList.add(pointDInteret);
-//                }
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.out.println("The read failed: " + databaseError.getCode());
-//            }
-//        });
+         mDatabase =  FirebaseDatabase.getInstance().getReference();
+         pointsDInteretsCloudEndPoint = mDatabase.child("pointDInterets");
+         parcoursCloudEndPoint = mDatabase.child("parcours/histoire");
+
+        parcoursCloudEndPoint.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Parcours parcours = dataSnapshot.getValue(Parcours.class);
+                drawPrimaryLinePath(parcours.getListePoints());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+        pointsDInteretsCloudEndPoint.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+                    PointDinteret pointDInteret = noteSnapshot.getValue(PointDinteret.class);
+                    LatLng point1 = new LatLng(Double.valueOf(pointDInteret.getxCoord()), Double.valueOf(pointDInteret.getyCoord()));
+                    if (mMap != null && pointDInteret != null)
+                        mMap.addMarker(new MarkerOptions().position(point1).title(pointDInteret.getNom()));
+                    pointDinteretList.add(pointDInteret);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
     }
 
-    private void drawPrimaryLinePath(List<PointParcours> listLocsToDraw) {
-        if (mMap == null) {
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mWeziteboot.addDeconnectionListener();
+    }
+
+    private void drawPrimaryLinePath( List<PointParcours> listLocsToDraw ) {
+        if ( mMap == null ) {
             return;
         }
         if (listLocsToDraw.size() < 2) {
