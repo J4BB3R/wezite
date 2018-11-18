@@ -1,5 +1,7 @@
 package ca.wezite.wezite.model;
 
+import java.util.List;
+
 public class PointDinteret {
 
     private String id;
@@ -11,6 +13,12 @@ public class PointDinteret {
     private  String xCoord;
 
     private String yCoord;
+
+    private String imgPath;
+
+    private List<Commentaire> listCommentaire;
+
+    private String auteur;
 
     public PointDinteret() {
     }
@@ -61,6 +69,30 @@ public class PointDinteret {
 
     public void setyCoord(String yCoord) {
         this.yCoord = yCoord;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
+    }
+
+    public List<Commentaire> getListCommentaire() {
+        return listCommentaire;
+    }
+
+    public void setListCommentaire(List<Commentaire> listCommentaire) {
+        this.listCommentaire = listCommentaire;
+    }
+
+    public String getAuteur() {
+        return auteur;
+    }
+
+    public void setAuteur(String auteur) {
+        this.auteur = auteur;
     }
 
     @Override

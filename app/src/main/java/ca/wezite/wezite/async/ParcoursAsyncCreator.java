@@ -35,8 +35,9 @@ public class ParcoursAsyncCreator extends AsyncTask<String, Void, Boolean> {
 
         p = new Parcours();
         String key = "histoire";
+        p.setNomCreateur("Baptiste C");
         p.setId(key);
-        p.setName("Aux originess historiques du Saguenay");
+        p.setName("Aux origines historiques du Saguenay");
 
         p.setListIdPointsInterets(new ArrayList<String>());
         listPointsDinterets = InitData.initPointsDinterets();
@@ -75,6 +76,9 @@ public class ParcoursAsyncCreator extends AsyncTask<String, Void, Boolean> {
             JSONObject jsono = new JSONObject(data);
             JSONArray routes = jsono.getJSONArray("routes");
             JSONArray geometry = routes.getJSONObject(0).getJSONArray("geometry");
+
+            double duree = routes.getJSONObject(0).getJSONObject("summary").getDouble("duration");
+            p.setDuree(p.getDuree()+duree);
             final List<PointParcours> listePointsParcours = new ArrayList<>();
             for(int i=0;i<geometry.length();i++){
                 JSONArray coordonnees = geometry.getJSONArray(i);

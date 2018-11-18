@@ -2,4 +2,5 @@
     <string name="app_name">Wezite</string>
     <string name="title_activity_visite">Visite</string>
     <string name="parcoursDocument">parcours</string>
+    <string name="title_activity_test">TestActivity</string>
 </resources>
