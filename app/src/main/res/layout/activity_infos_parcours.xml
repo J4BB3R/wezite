@@ -7,7 +7,6 @@
     android:layout_height="match_parent"
     android:padding="5dp">
 
-
     <TextView
         android:id="@+id/titreP"
         android:layout_width="379dp"
@@ -16,9 +15,10 @@
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
         android:layout_marginBottom="10dp"
-        android:paddingBottom="5dp"
         android:gravity="center"
-        android:text="Titre du parcours" />
+        android:paddingBottom="5dp"
+        android:text="Titre du parcours"
+        android:textStyle="bold" />
 
 
             <ImageView
@@ -30,16 +30,17 @@
                 app:srcCompat="@color/colorPrimary" />
 
             <TextView
+                android:id="@+id/resumeP"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_toRightOf="@+id/imageP"
-                android:layout_below="@+id/titreP"
-                android:text="Type: X \nDurée: X h X min \nDistance: X km"
-                />
+                android:layout_below="@+id/titreP" />
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/imageP"
                 android:layout_marginTop="10dp"
-                android:text="Description"/>
+                android:text="Description : \n"
+                android:id="@+id/descriptionP" />
 </RelativeLayout>

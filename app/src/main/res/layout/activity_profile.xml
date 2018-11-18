@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_demarrage"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="5dp">
+
+    <TextView
+        android:id="@+id/nomProfile"
+        android:layout_width="379dp"
+        android:layout_height="42dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:paddingBottom="5dp"
+        android:text="John Doe"
+        android:textStyle="bold" />
+
+
+    <ImageView
+        android:id="@+id/photoProfile"
+        android:layout_width="130dp"
+        android:layout_height="180dp"
+        android:layout_marginRight="7dp"
+        android:layout_below="@+id/nomProfile"
+        app:srcCompat="@color/colorPrimary" />
+
+    <TextView
+        android:id="@+id/resumeProfile"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_toRightOf="@+id/photoProfile"
+        android:layout_below="@+id/nomProfile" />
+
+    <TextView
+        android:id="@+id/statsProfile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/photoProfile"
+        android:layout_marginTop="10dp"
+        android:text="Statistiques : \n" />
+</RelativeLayout>
