@@ -51,7 +51,7 @@ public class ConnectActivity extends Activity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null){
-                    startActivity(new Intent(ConnectActivity.this, VisiteActivity.class));
+                    startActivity(new Intent(ConnectActivity.this, HomeActivity.class));
                 }
             }
         };
