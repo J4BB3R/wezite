@@ -50,6 +50,7 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
     private WeziteBoot mWeziteboot;
 
     private GoogleMap mMap;
+    FloatingActionButton playButton;
 
     private DatabaseReference mDatabase;
     private DatabaseReference pointsDInteretsCloudEndPoint;
@@ -71,8 +72,10 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        ParcoursAsyncCreator directionsReader =new ParcoursAsyncCreator();
+//        ParcoursAsyncCreator directionsReader =new ParcoursAsyncCreator();
         // directionsReader.execute();
+        playButton = (FloatingActionButton) findViewById(R.id.afficher_details);
+        playButton.hide();
 
         mWeziteboot = new WeziteBoot();
         mWeziteboot.checkFirebaseAuth(this, findViewById(R.id.map)); // DO NOT FORGET PLZZZ
@@ -201,7 +204,6 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
                 }
             }
         }
-        FloatingActionButton playButton = (FloatingActionButton) findViewById(R.id.afficher_details);
 
         if(!isPointAPromite){
             playButton.hide();
@@ -232,6 +234,9 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
         intent.putExtra("titre", pointAPromite.getNom());
         intent.putExtra("description", pointAPromite.getDescription());
         intent.putExtra("photo", pointAPromite.getImgPath());
+        intent.putExtra("auteur", pointAPromite.getAuteur());
+        intent.putExtra("nbVues", pointAPromite.getNbVues());
+        intent.putExtra("dateCreation", pointAPromite.getDateCréation());
         startActivity(intent);
     }
 }

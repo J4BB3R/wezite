@@ -1,5 +1,6 @@
 package ca.wezite.wezite.model;
 
+import java.util.Date;
 import java.util.List;
 
 public class PointDinteret {
@@ -16,9 +17,11 @@ public class PointDinteret {
 
     private String imgPath;
 
-    private List<Commentaire> listCommentaire;
+    private int nbVues;
 
     private String auteur;
+
+    private Date dateCréation;
 
     public PointDinteret() {
     }
@@ -79,12 +82,20 @@ public class PointDinteret {
         this.imgPath = imgPath;
     }
 
-    public List<Commentaire> getListCommentaire() {
-        return listCommentaire;
+    public int getNbVues() {
+        return nbVues;
     }
 
-    public void setListCommentaire(List<Commentaire> listCommentaire) {
-        this.listCommentaire = listCommentaire;
+    public void setNbVues(int nbVues) {
+        this.nbVues = nbVues;
+    }
+
+    public Date getDateCréation() {
+        return dateCréation;
+    }
+
+    public void setDateCréation(Date dateCréation) {
+        this.dateCréation = dateCréation;
     }
 
     public String getAuteur() {
