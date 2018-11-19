@@ -43,7 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Description"
+                android:text="@string/description"
                 android:onClick="afficherCacherDescription"
                 android:textAlignment="viewStart" />
 
@@ -53,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:layout_weight="1"
-                android:text="Ceci est la description" />
+                android:text="" />
 
             <Button
                 android:id="@+id/infos_title"
@@ -61,22 +61,100 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Informations générales"
-                android:textAlignment="viewStart" />
+                android:text="@string/informations_generales"
+                android:textAlignment="viewStart"
+                android:onClick="afficherCacherDescription"/>
 
-            <LinearLayout
+
+
+            <TableLayout
+                android:id="@+id/infos_generales_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:layout_margin="10dp"
+                android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/infos_content"
+                <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                    android:layout_height="match_parent">
 
+                    <TextView
+                        android:id="@+id/auteur_titre2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:maxLines="1"
+                        android:singleLine="false"
+                        android:text="Auteur : "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/auteur_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="100" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/nb_vues_titres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:maxLines="1"
+                        android:singleLine="false"
+                        android:text="Vues : "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/nb_vues_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="100" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/date_creation_titre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.1"
+                        android:maxLines="1"
+                        android:singleLine="false"
+                        android:text="Ajouté le  : "
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/date_creation_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="100" />
+                </TableRow>
+
+            </TableLayout>
+
+            <Button
+                android:id="@+id/infos_title2"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Photos"
+                android:textAlignment="viewStart" />
+
+            <ImageView
+                android:id="@+id/first_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="L'image du lieu"
+                android:scaleType="centerCrop"
+                tools:visibility="visible" />
         </LinearLayout>
 
 
