@@ -10,6 +10,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 
 import android.widget.SeekBar;
@@ -39,6 +41,14 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Spinner spin;
+    private String[] arraySpinner = new String[] {
+            "Tous",
+            "Nature",
+            "Culture",
+            "Art",
+            "Histoire",
+            "Photographie"
+    };
 
     private List<Parcours> parcourListBuff = new ArrayList<>();
     private List<Parcours> parcourList = new ArrayList<>();
@@ -93,15 +103,20 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
         });
 
         // TODO Change with database array
-        Spinner spin = (Spinner)findViewById(R.id.typeSpinner);
-        String[] arraySpinner = new String[] {
-                "Tous",
-                "Nature",
-                "Culture",
-                "Art",
-                "Histoire",
-                "Photographie"
-        };
+        spin = (Spinner)findViewById(R.id.typeSpinner);
+
+        spin.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                prepareDatas();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item, arraySpinner);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spin.setAdapter(adapter);
@@ -126,8 +141,15 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
 
     public void prepareDatas(){
         parcourList.clear();
+        String spinnerValue = arraySpinner[spin.getSelectedItemPosition()];
+        boolean check = arraySpinner[0].equals(spinnerValue);
+
         for(Parcours par: parcourListBuff){
-            parcourList.add(par);
+            if(spinnerValue.equals(par.getType())){
+                parcourList.add(par);
+            } else if(check) {
+                parcourList.add(par);
+            }
         }
         mAdapter.notifyDataSetChanged();
     }

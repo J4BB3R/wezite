@@ -54,6 +54,7 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
         Intent serviceIntent = new Intent(this, MenuService.class);
         serviceIntent.putExtra("id", menuItem.getItemId());
         startService(serviceIntent);
+        mDrawer.closeDrawers();
         return true;
     }
     
