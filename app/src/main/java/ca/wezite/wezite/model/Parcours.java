@@ -14,6 +14,16 @@ public class Parcours {
     public Parcours() {
     }
 
+    public void setDistance(float distance) {
+        this.distance = distance;
+    }
+
+    public float getDistance() {
+        return distance;
+    }
+
+    private float distance;
+
     private String description;
 
     private double duree;

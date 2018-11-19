@@ -3,6 +3,7 @@ package ca.wezite.wezite.view;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
     public class VignetteHolder extends RecyclerView.ViewHolder {
         public FrameLayout parentLayout;
         public ImageView img;
-        public TextView title, desc;
+        public TextView title, desc, distance;
 
         public VignetteHolder(View view) {
             super(view);
@@ -34,6 +35,7 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
             img = (ImageView) view.findViewById(R.id.imageView);
             title = (TextView) view.findViewById(R.id.titleParcourVignette);
             desc = (TextView) view.findViewById(R.id.descParcourVignette);
+            distance = (TextView) view.findViewById(R.id.distanceParcourVignette);
         }
     }
 
@@ -53,6 +55,7 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
         final Parcours parcours = parcoursList.get(position);
         holder.title.setText(parcours.getName());
         holder.desc.setText(parcours.getDescription());
+        holder.distance.setText(Integer.toString((int)parcours.getDistance())+" m");
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override

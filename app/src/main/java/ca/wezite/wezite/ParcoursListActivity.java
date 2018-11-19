@@ -1,8 +1,15 @@
 package ca.wezite.wezite;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -41,7 +48,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Spinner spin;
-    private String[] arraySpinner = new String[] {
+    private String[] arraySpinner = new String[]{
             "Tous",
             "Nature",
             "Culture",
@@ -49,6 +56,9 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
             "Histoire",
             "Photographie"
     };
+    private LocationManager locationManager;
+    private Location location;
+    private SeekBar simpleSeek;
 
     private List<Parcours> parcourListBuff = new ArrayList<>();
     private List<Parcours> parcourList = new ArrayList<>();
@@ -60,7 +70,15 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
 
         mDrawer = findViewById(R.id.parcourList);
 
-        mWeziteboot.checkFirebaseAuth(this,mDrawer); // DO NOT FORGET PLZZZ
+        mWeziteboot.checkFirebaseAuth(this, mDrawer); // DO NOT FORGET PLZZZ
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        } else {
+            location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
+        }
 
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
         ((NavigationView)findViewById(R.id.nav_view)).setNavigationItemSelectedListener(this);
@@ -79,7 +97,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
         mRecyclerView.setAdapter(mAdapter);
 
 
-        SeekBar simpleSeek = (SeekBar)findViewById(R.id.distance);
+        simpleSeek = (SeekBar)findViewById(R.id.distance);
         final TextView simpleSeekValue = (TextView) findViewById(R.id.distanceValueTxt);
 
         simpleSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
@@ -145,10 +163,15 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
         boolean check = arraySpinner[0].equals(spinnerValue);
 
         for(Parcours par: parcourListBuff){
-            if(spinnerValue.equals(par.getType())){
-                parcourList.add(par);
-            } else if(check) {
-                parcourList.add(par);
+            if(spinnerValue.equals(par.getType())||check){
+                float[] distance = new float[1];
+                Location.distanceBetween(location.getLatitude(),
+                        location.getLongitude(), Double.parseDouble(par.getListePoints().get(0).getxCoord()),
+                        Double.parseDouble(par.getListePoints().get(0).getyCoord()), distance);
+                par.setDistance(distance[0]);
+                if(distance[0]<=simpleSeek.getProgress()*1000){
+                    parcourList.add(par);
+                }
             }
         }
         mAdapter.notifyDataSetChanged();
