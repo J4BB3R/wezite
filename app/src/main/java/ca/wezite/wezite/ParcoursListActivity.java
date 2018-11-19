@@ -6,33 +6,78 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
+
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import ca.wezite.wezite.model.Parcours;
+import ca.wezite.wezite.model.PointDinteret;
 import ca.wezite.wezite.utils.WeziteBoot;
+import ca.wezite.wezite.view.ParcourListAdaptor;
 
-public class ParcoursListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ParcoursListActivity extends MereActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private WeziteBoot mWeziteboot;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private Spinner spin;
+    private String[] arraySpinner = new String[] {
+            "Tous",
+            "Nature",
+            "Culture",
+            "Art",
+            "Histoire",
+            "Photographie"
+    };
 
-    private DrawerLayout mDrawer;
-    private ActionBarDrawerToggle mMenu;
-    private NavigationView nav;
-
-    private LinearLayout mListParcour;
+    private List<Parcours> parcourListBuff = new ArrayList<>();
+    private List<Parcours> parcourList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parcours_list);
 
-        mWeziteboot = new WeziteBoot();
+        mDrawer = findViewById(R.id.parcourList);
+
         mWeziteboot.checkFirebaseAuth(this,mDrawer); // DO NOT FORGET PLZZZ
+
+        mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
+        ((NavigationView)findViewById(R.id.nav_view)).setNavigationItemSelectedListener(this);
+        mDrawer.addDrawerListener(mMenu);
+        mMenu.syncState();
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.parcour_list);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new ParcourListAdaptor(this,parcourList);
+        mRecyclerView.setAdapter(mAdapter);
+
 
         SeekBar simpleSeek = (SeekBar)findViewById(R.id.distance);
         final TextView simpleSeekValue = (TextView) findViewById(R.id.distanceValueTxt);
@@ -49,81 +94,63 @@ public class ParcoursListActivity extends AppCompatActivity implements Navigatio
             }
 
             @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-
-            }
+            public void onStartTrackingTouch(SeekBar seekBar) { }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                prepareDatas();
             }
         });
 
         // TODO Change with database array
-        Spinner spin = (Spinner)findViewById(R.id.typeSpinner);
-        String[] arraySpinner = new String[] {
-                "Nature",
-                "Culture",
-                "Art",
-                "Histoire",
-                "Photographie",
-                "Tous"
-        };
+        spin = (Spinner)findViewById(R.id.typeSpinner);
+
+        spin.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                prepareDatas();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item, arraySpinner);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spin.setAdapter(adapter);
 
+        mDatabase.child("parcours").addValueEventListener(new ValueEventListener() { //TODO Change filter
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
+                    parcourListBuff.add(noteSnapshot.getValue(Parcours.class));
+                }
+                prepareDatas();
+            }
 
-        mDrawer = findViewById(R.id.parcourList);
-        mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
-        nav = findViewById(R.id.nav_view);
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
 
-        nav.setNavigationItemSelectedListener(this);
-        mDrawer.addDrawerListener(mMenu);
-        mMenu.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        prepareDatas();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mWeziteboot.addDeconnectionListener();
+    public void prepareDatas(){
+        parcourList.clear();
+        String spinnerValue = arraySpinner[spin.getSelectedItemPosition()];
+        boolean check = arraySpinner[0].equals(spinnerValue);
 
-        mListParcour = (LinearLayout) findViewById(R.id.listParcour);
-
-    }
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
-
-        if(mMenu.onOptionsItemSelected(item)) {
-            return true;
+        for(Parcours par: parcourListBuff){
+            if(spinnerValue.equals(par.getType())){
+                parcourList.add(par);
+            } else if(check) {
+                parcourList.add(par);
+            }
         }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        int id = menuItem.getItemId();
-
-        switch (id) {
-            case R.id.nav_profile:
-                Toast.makeText(this, "Profile", Toast.LENGTH_LONG).show();
-                setContentView(R.layout.activity_parcours_list);
-                break;
-            case R.id.nav_add_place:
-                Toast.makeText(this, "Add Place", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_parcours:
-                Toast.makeText(this, "Parcours", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_logout:
-                Toast.makeText(this, "Deconnexion", Toast.LENGTH_LONG).show();
-                break;
-        }
-        return super.onOptionsItemSelected(menuItem);
+        mAdapter.notifyDataSetChanged();
     }
 }
