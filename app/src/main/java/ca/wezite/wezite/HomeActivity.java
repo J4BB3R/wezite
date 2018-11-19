@@ -62,18 +62,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         switch (id) {
             case R.id.nav_profile:
+                mDrawer.closeDrawers();
                 Toast.makeText(this, "Profile", Toast.LENGTH_LONG).show();
                 break;
             case R.id.nav_add_place:
+                mDrawer.closeDrawers();
                 Toast.makeText(this, "Add Place", Toast.LENGTH_LONG).show();
                 break;
             case R.id.nav_parcours:
                 startActivity(new Intent(HomeActivity.this, ParcoursListActivity.class ));
+                mDrawer.closeDrawers();
                 break;
             case R.id.nav_settings:
+                mDrawer.closeDrawers();
                 Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();
                 break;
             case R.id.nav_logout:
+                mDrawer.closeDrawers();
                 FirebaseAuth.getInstance().signOut();
                 break;
         }
