@@ -40,7 +40,7 @@ public class ParcoursAsyncCreator extends AsyncTask<String, Void, Boolean> {
         p.setName("Aux origines historiques du Saguenay");
         p.setDescription("Découvrez les monuments historiques du Saguenay, en vous promenant sur les rives de la rivière mythique ! Voyagez dans le temps, et retracez le parcours des premiers colons, qui ont bati cette ville à la sueur de leur front");
         p.setType("Culture");
-        p.setImgPath("barrage-3.jpg");
+        p.setImgPath("barrage.jpg");
 
         p.setListIdPointsInterets(new ArrayList<String>());
         listPointsDinterets = InitData.initPointsDinterets();
