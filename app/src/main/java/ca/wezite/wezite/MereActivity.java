@@ -32,8 +32,6 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
         mDatabase =  FirebaseDatabase.getInstance().getReference();
         mWeziteboot = new WeziteBoot();
         mStorage = FirebaseStorage.getInstance();
-
-
     }
 
     @Override

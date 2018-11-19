@@ -25,8 +25,7 @@ public class HomeActivity extends MereMapsActivity implements NavigationView.OnN
         super.onCreate(savedInstanceState);
         mDrawer = findViewById(R.id.home);
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
-        nav = findViewById(R.id.nav_view);
-        nav.setNavigationItemSelectedListener(this);
+        ((NavigationView)findViewById(R.id.nav_view)).setNavigationItemSelectedListener(this);
         mDrawer.addDrawerListener(mMenu);
         mMenu.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

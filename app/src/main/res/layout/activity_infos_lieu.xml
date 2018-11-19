@@ -24,6 +24,14 @@
             android:orientation="vertical"
             android:layout_alignParentLeft="true">
 
+            <ImageView
+                android:id="@+id/first_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="L'image du lieu"
+                android:scaleType="centerCrop"
+                tools:visibility="visible" />
+
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
@@ -35,7 +43,8 @@
                 android:gravity="center_horizontal"
                 android:text="Titre"
                 android:textSize="24dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"/>
 
             <Button
                 android:id="@+id/description_title"
@@ -148,13 +157,6 @@
                 android:text="Photos"
                 android:textAlignment="viewStart" />
 
-            <ImageView
-                android:id="@+id/first_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:contentDescription="L'image du lieu"
-                android:scaleType="centerCrop"
-                tools:visibility="visible" />
         </LinearLayout>
 
 
