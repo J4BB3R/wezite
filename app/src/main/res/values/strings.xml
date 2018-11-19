@@ -7,4 +7,6 @@
     <string name="ajoute">Ajouter</string>
     <string name="params">Parametres</string>
     <string name="deconn">Deconnexion</string>
+    <string name="informations_generales">Informations générales</string>
+    <string name="description">Description</string>
 </resources>

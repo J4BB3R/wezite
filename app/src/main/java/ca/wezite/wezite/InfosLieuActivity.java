@@ -1,6 +1,7 @@
 package ca.wezite.wezite;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -10,25 +11,48 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.io.File;
+import java.io.IOException;
+
+import ca.wezite.wezite.async.DownloadImageTask;
 import ca.wezite.wezite.utils.WeziteBoot;
 
 public class InfosLieuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     TextView descTextView;
+    TextView titreTextView;
+    TextView createurTextView;
+    TextView nbVuesTextView;
+    TextView dateTextView;
+
 
     private WeziteBoot mWeziteboot;
 
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mMenu;
     private NavigationView nav;
+    private TableLayout infosGeneralesLayout;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_infos_lieu);
+        infosGeneralesLayout = findViewById(R.id.infos_generales_container);
+        infosGeneralesLayout.setVisibility(View.GONE);
         mDrawer = findViewById(R.id.activity_demarrage);
 
         mWeziteboot = new WeziteBoot();
@@ -47,6 +71,37 @@ public class InfosLieuActivity extends AppCompatActivity implements NavigationVi
         String description = intent.getStringExtra("description");
         descTextView = (TextView) findViewById(R.id.description_content);
         descTextView.setText(description);
+        titreTextView = (TextView) findViewById(R.id.title);
+        titreTextView.setText(intent.getStringExtra("titre"));
+        createurTextView = findViewById(R.id.auteur_text);
+        createurTextView.setText(intent.getStringExtra("auteur"));
+        dateTextView = findViewById(R.id.date_creation_text);
+        dateTextView.setText(intent.getStringExtra("dateCreation"));
+        nbVuesTextView = findViewById(R.id.nb_vues_text);
+        nbVuesTextView.setText(intent.getStringExtra("nbVues"));
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+
+        String photo = intent.getStringExtra("photo");
+        if(photo!=null){
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images").child(photo);
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    new DownloadImageTask((ImageView) findViewById(R.id.first_image))
+                            .execute(uri.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+
+
+        }
+
 
     }
 
@@ -69,8 +124,10 @@ public class InfosLieuActivity extends AppCompatActivity implements NavigationVi
     public void afficherCacherDescription(View view) {
         if(descTextView.getVisibility()==View.VISIBLE){
             descTextView.setVisibility(View.GONE);
+            infosGeneralesLayout.setVisibility(View.VISIBLE);
         } else{
             descTextView.setVisibility(View.VISIBLE);
+            infosGeneralesLayout.setVisibility(View.GONE);
         }
 
     }

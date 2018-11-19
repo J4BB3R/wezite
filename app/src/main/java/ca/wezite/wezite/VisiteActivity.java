@@ -230,13 +230,16 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
     }
 
     public void afficherPlus(View view) {
+        android.text.format.DateFormat df = new android.text.format.DateFormat();
+
+
         Intent intent = new Intent(VisiteActivity.this, InfosLieuActivity.class);
         intent.putExtra("titre", pointAPromite.getNom());
         intent.putExtra("description", pointAPromite.getDescription());
         intent.putExtra("photo", pointAPromite.getImgPath());
         intent.putExtra("auteur", pointAPromite.getAuteur());
-        intent.putExtra("nbVues", pointAPromite.getNbVues());
-        intent.putExtra("dateCreation", pointAPromite.getDateCréation());
+        intent.putExtra("nbVues", pointAPromite.getNbVues()+"");
+        intent.putExtra("dateCreation", df.format("dd/MM/yyyy", pointAPromite.getDateCréation()));
         startActivity(intent);
     }
 }
