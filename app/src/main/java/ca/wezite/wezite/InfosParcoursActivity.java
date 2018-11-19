@@ -1,9 +1,12 @@
 package ca.wezite.wezite;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -31,6 +34,16 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         readOnDB();
+
+        FloatingActionButton btn = findViewById(R.id.floating);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent parc = new Intent( InfosParcoursActivity.this, VisiteActivity.class);
+                parc.putExtra("key", par);
+                startActivity(parc);
+            }
+        });
     }
 
     public void readOnDB(){
