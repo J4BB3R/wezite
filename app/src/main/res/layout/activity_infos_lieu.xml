@@ -15,54 +15,68 @@
         android:layout_height="match_parent"
 
         >
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:layout_alignParentLeft="true">
+            android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/first_image"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:contentDescription="L'image du lieu"
-                android:scaleType="centerCrop"
-                tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/title"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:text="Titre"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"/>
+                android:layout_height="match_parent" >
+
+                <ImageView
+                    android:id="@+id/first_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="220dp"
+                    android:contentDescription="L'image du lieu"
+                    android:scaleType="centerCrop"/>
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_weight="1"
+                    android:layout_gravity="bottom"
+                    android:background="@color/overlayTitle"
+                    android:gravity="center"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="15dp"
+                    android:text="Titre"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="24dp"
+                    android:textStyle="bold" />
+            </android.support.v7.widget.CardView>
 
             <Button
                 android:id="@+id/description_title"
                 style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:layout_weight="1"
-                android:text="@string/description"
+                android:textSize="18dp"
+                android:textColor="@color/titleExtra"
                 android:onClick="afficherCacherDescription"
+                android:text="@string/description"
                 android:textAlignment="viewStart" />
 
             <TextView
                 android:id="@+id/description_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
                 android:layout_weight="1"
-                android:text="" />
+                android:textSize="15dp" />
 
             <Button
                 android:id="@+id/infos_title"
@@ -70,10 +84,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:onClick="afficherCacherDescription"
+                android:textSize="18dp"
+                android:textColor="@color/textDark"
                 android:text="@string/informations_generales"
-                android:textAlignment="viewStart"
-                android:onClick="afficherCacherDescription"/>
-
+                android:textAlignment="viewStart" />
 
 
             <TableLayout
@@ -85,7 +101,9 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp">
 
                     <TextView
                         android:id="@+id/auteur_titre2"
@@ -95,18 +113,22 @@
                         android:maxLines="1"
                         android:singleLine="false"
                         android:text="Auteur : "
+                        android:textSize="15dp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/auteur_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="100" />
+                        android:layout_weight="100"
+                        android:textSize="15dp" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp">
 
                     <TextView
                         android:id="@+id/nb_vues_titres"
@@ -116,18 +138,22 @@
                         android:maxLines="1"
                         android:singleLine="false"
                         android:text="Vues : "
+                        android:textSize="15dp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/nb_vues_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="100" />
+                        android:layout_weight="100"
+                        android:textSize="15dp" />
                 </TableRow>
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp">
 
                     <TextView
                         android:id="@+id/date_creation_titre"
@@ -137,37 +163,31 @@
                         android:maxLines="1"
                         android:singleLine="false"
                         android:text="Ajouté le  : "
+                        android:textSize="15dp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/date_creation_text"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="100" />
+                        android:layout_weight="100"
+                        android:textSize="15dp" />
                 </TableRow>
 
             </TableLayout>
-
-            <Button
-                android:id="@+id/infos_title2"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Photos"
-                android:textAlignment="viewStart" />
 
         </LinearLayout>
 
 
     </RelativeLayout>
+
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:menu="@menu/nav_menu"/>
+        app:menu="@menu/nav_menu" />
 
 
 

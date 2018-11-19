@@ -30,7 +30,7 @@
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyDP2TBI4eNyhvcDBXwVPU-Lpuox2xfiew0" />
 
         <activity
             android:name=".VisiteActivity"
@@ -47,7 +47,8 @@
         <activity android:name=".ParcoursListActivity" />
         <activity android:name=".InfosLieuActivity" />
         <activity android:name=".ProfileActivity" />
-        <activity android:name=".InfosParcoursActivity" />
+        <activity android:name=".InfosParcoursActivity"
+            android:configChanges="orientation|screenSize"/>
         
         <service
             android:name=".service.MenuService"

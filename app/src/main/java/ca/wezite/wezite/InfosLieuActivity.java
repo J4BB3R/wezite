@@ -89,11 +89,9 @@ public class InfosLieuActivity extends MereActivity implements NavigationView.On
     }
 
     public void afficherCacherDescription(View view) {
-        if(descTextView.getVisibility()==View.VISIBLE){
-            descTextView.setVisibility(View.GONE);
+        if(infosGeneralesLayout.getVisibility()==View.GONE){
             infosGeneralesLayout.setVisibility(View.VISIBLE);
         } else{
-            descTextView.setVisibility(View.VISIBLE);
             infosGeneralesLayout.setVisibility(View.GONE);
         }
 

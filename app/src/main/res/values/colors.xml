@@ -9,4 +9,5 @@
     <color name="errorColor">#DC4C41</color>
     <color name="successColor">#4AB366</color>
     <color name="warningColor">#FFF664</color>
+    <color name="overlayTitle">#C0333333</color>
 </resources>
