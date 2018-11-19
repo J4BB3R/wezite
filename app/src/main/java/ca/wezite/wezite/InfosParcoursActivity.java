@@ -17,7 +17,7 @@ import com.google.firebase.database.ValueEventListener;
 
 public class InfosParcoursActivity extends MereActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private String par = "histoire";
+    private String par;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +32,7 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
         mDrawer.addDrawerListener(mMenu);
         mMenu.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        par = getIntent().getStringExtra("id_parcours");
         readOnDB();
 
         FloatingActionButton btn = findViewById(R.id.floating);
@@ -40,7 +40,7 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
             @Override
             public void onClick(View v) {
                 Intent parc = new Intent( InfosParcoursActivity.this, VisiteActivity.class);
-                parc.putExtra("key", par);
+                parc.putExtra("id_parcours", par);
                 startActivity(parc);
             }
         });

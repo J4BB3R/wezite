@@ -68,7 +68,7 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(mContext, InfosParcoursActivity.class);
-                intent.putExtra("id_parcour", parcours.getId());
+                intent.putExtra("id_parcours", parcours.getId());
                 mContext.startActivity(intent);
             }
         });

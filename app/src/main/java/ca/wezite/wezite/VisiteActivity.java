@@ -45,7 +45,7 @@ public class VisiteActivity extends MereMapsActivity implements OnMapReadyCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        parcoursCloudEndPoint = mDatabase.child("parcours/histoire");
+        parcoursCloudEndPoint = mDatabase.child("parcours/"+getIntent().getStringExtra("id_parcours"));
 
         parcoursCloudEndPoint.addValueEventListener(new ValueEventListener() {
             @Override
