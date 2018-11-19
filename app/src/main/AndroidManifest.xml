@@ -39,7 +39,6 @@
         <activity
             android:name=".ConnectActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -48,13 +47,15 @@
         <activity android:name=".ParcoursListActivity" />
         <activity android:name=".InfosLieuActivity" />
         <activity android:name=".ProfileActivity" />
-
+        <activity android:name=".InfosParcoursActivity" />
+        
         <service
             android:name=".service.MenuService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".InfosParcoursActivity" />
+
+
     </application>
 
 </manifest>
