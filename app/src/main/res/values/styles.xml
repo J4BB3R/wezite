@@ -14,5 +14,7 @@
         <item name="android:background">#DD111111</item>
         <item name="android:gravity">center</item>
     </style>
-
+    <style name="seekBar" parent="android:Widget.SeekBar">
+        <item name="android:color">@color/colorPrimary</item>
+    </style>
 </resources>
