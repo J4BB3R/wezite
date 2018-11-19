@@ -3,6 +3,7 @@
     <string name="title_activity_visite">Visite</string>
     <string name="parcours">parcours</string>
     <string name="googleAcc">Se connecter avec Google+</string>
+    <string name="home">Accueil</string>
     <string name="profil">Profil</string>
     <string name="ajoute">Ajouter</string>
     <string name="params">Parametres</string>

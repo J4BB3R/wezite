@@ -45,6 +45,14 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
             }
         });
     }
+    public String timeStoHMS(double num){
+
+        int hours = (int) num / 3600;
+        int minutes = (int) (num % 3600) / 60;
+
+        return String.format("%02d h %02d min", hours, minutes);
+    }
+
 
     public void readOnDB(){
 
@@ -55,10 +63,16 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
             public void onDataChange(@NonNull DataSnapshot data) {
                 TextView txt = findViewById(R.id.titreP);
                 TextView resum = findViewById(R.id.resumeP);
+                TextView imp = findViewById(R.id.importantP);
+                TextView lis = findViewById(R.id.listPI);
                 txt.setText(data.child("parcours").child(par).child("name").getValue(String.class));
-                resum.setText("Type : " + data.child("parcours").child(par).child("type").getValue(String.class) + "\nDurée : " + data.child("parcours").child(par).child("duree").getValue(Double.class) + "\n");
+                String time = timeStoHMS(data.child("parcours").child(par).child("duree").getValue(Double.class));
+                resum.setText(resum.getText() + data.child("parcours").child(par).child("description").getValue(String.class));
+                imp.setText("Type : " + data.child("parcours").child(par).child("type").getValue(String.class) + "\nDurée : " + time + "\n");
+
+                //Liste Point Interet
                 for(DataSnapshot ds : data.child("parcours").child(par).child("listIdPointsInterets").getChildren()){
-                    resum.setText(resum.getText() + data.child("pointDInterets").child(ds.getValue(String.class)).child("nom").getValue(String.class) + "\n");
+                    lis.setText(lis.getText() + data.child("pointDInterets").child(ds.getValue(String.class)).child("nom").getValue(String.class) + "\n");
                 }
             }
 

@@ -27,6 +27,9 @@ public class MenuService extends Service {
         int id = intent.getIntExtra("id", 0);
 
         switch (id) {
+            case R.id.nav_home:
+                startActivity(new Intent(this, HomeActivity.class));
+                break;
             case R.id.nav_profile:
                 startActivity(new Intent(this, ProfileActivity.class));
                 break;
