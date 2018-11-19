@@ -18,7 +18,6 @@ import ca.wezite.wezite.utils.WeziteBoot;
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private WeziteBoot mWeziteboot;
-
     private DrawerLayout mDrawer;
     private ActionBarDrawerToggle mMenu;
     private NavigationView nav;
@@ -31,7 +30,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         mDrawer = findViewById(R.id.home);
 
         mWeziteboot = new WeziteBoot();
-        mWeziteboot.checkFirebaseAuth(this,mDrawer); // DO NOT FORGET PLZZZ
+        mWeziteboot.checkFirebaseAuth(this,mDrawer);
 
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
         nav = findViewById(R.id.nav_view);
