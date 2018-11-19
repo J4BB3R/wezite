@@ -73,7 +73,7 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 //        ParcoursAsyncCreator directionsReader =new ParcoursAsyncCreator();
-        // directionsReader.execute();
+//         directionsReader.execute();
         playButton = (FloatingActionButton) findViewById(R.id.afficher_details);
         playButton.hide();
 

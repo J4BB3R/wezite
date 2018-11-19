@@ -15,6 +15,8 @@ public class Parcours {
     public Parcours() {
     }
 
+    private String description;
+
     private double duree;
 
     private String nomCreateur;
@@ -26,6 +28,16 @@ public class Parcours {
     private List<PointParcours> listePoints;
 
     private List<String> listIdPointsInterets;
+
+    private String type;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public String getId() {
         return id;
@@ -83,5 +95,11 @@ public class Parcours {
         this.listIdPointsInterets = listIdPointsInterets;
     }
 
+    public String getDescription() {
+        return description;
+    }
 
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
