@@ -34,8 +34,8 @@
 
         <activity
             android:name=".VisiteActivity"
-            android:label="@string/title_activity_visite"/>
-        <activity android:name=".HomeActivity"/>
+            android:label="@string/title_activity_visite" />
+        <activity android:name=".HomeActivity" />
         <activity
             android:name=".ConnectActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
@@ -44,14 +44,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ParcoursListActivity"/>
+        <activity android:name=".ParcoursListActivity" />
         <activity android:name=".InfosLieuActivity" />
-        <activity android:name=".ProfileActivity"/>
-
+        <activity android:name=".ProfileActivity" />
+        <activity android:name=".InfosParcoursActivity" />
+        
         <service
             android:name=".service.MenuService"
             android:enabled="true"
             android:exported="true" />
+
 
 
     </application>
