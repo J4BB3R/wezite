@@ -1,26 +1,22 @@
 package ca.wezite.wezite;
 
 import android.Manifest;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.icu.text.IDNA;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
+import com.google.android.gms.common.internal.service.Common;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,10 +34,10 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import ca.wezite.wezite.async.ParcoursAsyncCreator;
 import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.PointDinteret;
 import ca.wezite.wezite.model.PointParcours;
+import ca.wezite.wezite.utils.CommonUtils;
 import ca.wezite.wezite.utils.Constantes;
 import ca.wezite.wezite.utils.WeziteBoot;
 
@@ -77,8 +73,8 @@ public class VisiteActivity extends FragmentActivity implements OnMapReadyCallba
         playButton = (FloatingActionButton) findViewById(R.id.afficher_details);
         playButton.hide();
 
-        mWeziteboot = new WeziteBoot();
-        mWeziteboot.checkFirebaseAuth(this, findViewById(R.id.map)); // DO NOT FORGET PLZZZ
+
+        CommonUtils.gererAuthentification(mWeziteboot, findViewById(R.id.map), this);
 
          mDatabase =  FirebaseDatabase.getInstance().getReference();
          pointsDInteretsCloudEndPoint = mDatabase.child("pointDInterets");
