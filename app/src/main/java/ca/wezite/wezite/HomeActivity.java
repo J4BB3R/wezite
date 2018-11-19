@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ca.wezite.wezite.service.MenuService;
 import ca.wezite.wezite.utils.WeziteBoot;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -58,26 +59,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        int id = menuItem.getItemId();
-
-        switch (id) {
-            case R.id.nav_profile:
-                Toast.makeText(this, "Profile", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_add_place:
-                Toast.makeText(this, "Add Place", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_parcours:
-                startActivity(new Intent(HomeActivity.this, ParcoursListActivity.class ));
-                break;
-            case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();
-                break;
-            case R.id.nav_logout:
-                FirebaseAuth.getInstance().signOut();
-                break;
-        }
-        return false;
+        Intent serviceIntent = new Intent(this, MenuService.class);
+        serviceIntent.putExtra("id", menuItem.getItemId());
+        startService(serviceIntent);
+        return true;
     }
+    
 }
 
