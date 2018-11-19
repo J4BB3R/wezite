@@ -35,6 +35,8 @@
         <activity
             android:name=".VisiteActivity"
             android:label="@string/title_activity_visite">
+
+
         </activity>
         <activity android:name=".HomeActivity">
         </activity>
@@ -45,11 +47,16 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
         <activity
             android:name=".ParcoursListActivity" >
         </activity>
         <activity android:name=".InfosLieuActivity"></activity>
+        <service
+            android:name=".service.MenuService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>

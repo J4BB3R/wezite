@@ -25,6 +25,8 @@ public class Parcours {
 
     private String name;
 
+    private String imgPath;
+
     private List<PointParcours> listePoints;
 
     private List<String> listIdPointsInterets;
@@ -101,5 +103,13 @@ public class Parcours {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 }
