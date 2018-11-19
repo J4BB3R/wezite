@@ -10,16 +10,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -33,7 +29,6 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -42,18 +37,14 @@ import java.util.List;
 import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.PointDinteret;
 import ca.wezite.wezite.model.PointParcours;
-import ca.wezite.wezite.service.MenuService;
 import ca.wezite.wezite.utils.Constantes;
-import ca.wezite.wezite.utils.WeziteBoot;
 
-public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
+public class VisiteActivity extends MereActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
-    private WeziteBoot mWeziteboot;
 
     private GoogleMap mMap;
     FloatingActionButton playButton;
 
-    private DatabaseReference mDatabase;
     private DatabaseReference pointsDInteretsCloudEndPoint;
     private DatabaseReference parcoursCloudEndPoint;
 
@@ -74,7 +65,6 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visite);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -84,10 +74,8 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
         playButton.hide();
 
 
-        mWeziteboot = new WeziteBoot();
         mWeziteboot.checkFirebaseAuth(this, findViewById(R.id.map)); // DO NOT FORGET PLZZZ
 
-         mDatabase =  FirebaseDatabase.getInstance().getReference();
          pointsDInteretsCloudEndPoint = mDatabase.child("pointDInterets");
          parcoursCloudEndPoint = mDatabase.child("parcours/histoire");
 
@@ -124,13 +112,9 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
         });
 
         mDrawer = findViewById(R.id.home);
-
-        mWeziteboot = new WeziteBoot();
         mWeziteboot.checkFirebaseAuth(this,mDrawer); // DO NOT FORGET PLZZZ
-
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
         nav = findViewById(R.id.nav_view);
-
         nav.setNavigationItemSelectedListener(this);
         mDrawer.addDrawerListener(mMenu);
         mMenu.syncState();
@@ -138,11 +122,6 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mWeziteboot.addDeconnectionListener();
-    }
 
     private void drawPrimaryLinePath( List<PointParcours> listLocsToDraw ) {
         if ( mMap == null ) {
@@ -177,7 +156,6 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
 
 
     }
-
     private void enableMyLocationIfPermitted() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
@@ -207,7 +185,6 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
             }
     }
 
-
     @Override
     public void onLocationChanged(Location location) {
         boolean isPointAPromite = false;
@@ -225,7 +202,6 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
                 }
             }
         }
-
         if(!isPointAPromite){
             playButton.hide();
         }
@@ -252,8 +228,6 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
 
     public void afficherPlus(View view) {
         android.text.format.DateFormat df = new android.text.format.DateFormat();
-
-
         Intent intent = new Intent(VisiteActivity.this, InfosLieuActivity.class);
         intent.putExtra("titre", pointAPromite.getNom());
         intent.putExtra("description", pointAPromite.getDescription());
@@ -264,20 +238,5 @@ public class VisiteActivity extends AppCompatActivity implements OnMapReadyCallb
         startActivity(intent);
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item){
 
-        if(mMenu.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        Intent serviceIntent = new Intent(this, MenuService.class);
-        serviceIntent.putExtra("id", menuItem.getItemId());
-        startService(serviceIntent);
-        return true;
-    }
 }
