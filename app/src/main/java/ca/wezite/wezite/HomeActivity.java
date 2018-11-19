@@ -16,16 +16,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import ca.wezite.wezite.service.MenuService;
 import ca.wezite.wezite.utils.WeziteBoot;
 
-public class HomeActivity extends MereActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class HomeActivity extends MereMapsActivity implements NavigationView.OnNavigationItemSelectedListener {
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
         mDrawer = findViewById(R.id.home);
-        mWeziteboot.checkFirebaseAuth(this,mDrawer);
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
         nav = findViewById(R.id.nav_view);
         nav.setNavigationItemSelectedListener(this);
