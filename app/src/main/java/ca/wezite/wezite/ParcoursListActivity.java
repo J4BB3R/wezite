@@ -59,6 +59,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
     private LocationManager locationManager;
     private Location location;
     private SeekBar simpleSeek;
+    private TextView resulTxt;
 
     private List<Parcours> parcourListBuff = new ArrayList<>();
     private List<Parcours> parcourList = new ArrayList<>();
@@ -95,6 +96,19 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
         // specify an adapter (see also next example)
         mAdapter = new ParcourListAdaptor(this,parcourList);
         mRecyclerView.setAdapter(mAdapter);
+
+        resulTxt = (TextView) findViewById(R.id.resultTxt);
+
+        /*
+        for(int i=0;i<12;i++){
+            Parcours p = new Parcours();
+            p.setType("Culture");
+            p.setName("Csdfsdfsdf");
+            p.setDescription("dfgdsfgfdsgfdsgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdf");
+            p.setDistance(2600);
+            parcourList.add(p);
+        }
+        */
 
 
         simpleSeek = (SeekBar)findViewById(R.id.distance);
@@ -170,7 +184,8 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
                         Double.parseDouble(par.getListePoints().get(0).getyCoord()), distance);
                 par.setDistance(distance[0]);
                 if(distance[0]<=simpleSeek.getProgress()*1000){
-                    parcourList.add(par);
+                    parcourList.add(par); //TODO trie par choix
+                    resulTxt.setText(mAdapter.getItemCount()+" Résultats"); //TODO Fix Page scroll
                 }
             }
         }

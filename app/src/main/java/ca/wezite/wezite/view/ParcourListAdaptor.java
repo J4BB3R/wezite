@@ -27,7 +27,7 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
     public class VignetteHolder extends RecyclerView.ViewHolder {
         public FrameLayout parentLayout;
         public ImageView img;
-        public TextView title, desc, distance;
+        public TextView title, desc, distance, duree;
 
         public VignetteHolder(View view) {
             super(view);
@@ -36,6 +36,7 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
             title = (TextView) view.findViewById(R.id.titleParcourVignette);
             desc = (TextView) view.findViewById(R.id.descParcourVignette);
             distance = (TextView) view.findViewById(R.id.distanceParcourVignette);
+            duree = (TextView) view.findViewById(R.id.dureeParcourVignette);
         }
     }
 
@@ -55,7 +56,13 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
         final Parcours parcours = parcoursList.get(position);
         holder.title.setText(parcours.getName());
         holder.desc.setText(parcours.getDescription());
-        holder.distance.setText(Integer.toString((int)parcours.getDistance())+" m");
+        holder.duree.setText(((int)parcours.getDuree()/60)+" min");
+        int distance = (int)parcours.getDistance();
+        if(distance >= 2500){
+            holder.distance.setText(Double.toString((distance-distance%100)/1000.0)+" Km");
+        } else {
+            holder.distance.setText(Integer.toString(distance)+" m");
+        }
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
