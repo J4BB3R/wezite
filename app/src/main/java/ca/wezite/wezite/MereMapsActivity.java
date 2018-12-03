@@ -169,6 +169,8 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
 
     public void afficherPlus(View view) {
         android.text.format.DateFormat df = new android.text.format.DateFormat();
+        pointsDInteretsCloudEndPoint.child(pointAPromite.getId()+"/"+"nbVues").setValue(pointAPromite.getNbVues()+1);
+
         Intent intent = new Intent(MereMapsActivity.this, InfosLieuActivity.class);
         intent.putExtra("titre", pointAPromite.getNom());
         intent.putExtra("description", pointAPromite.getDescription());

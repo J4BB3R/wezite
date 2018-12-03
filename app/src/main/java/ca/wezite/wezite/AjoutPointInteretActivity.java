@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -97,6 +98,7 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                         startActivityForResult(takePicture, 0);
                     }
                 });
+                ((Button) customView.findViewById(R.id.ajouter)).setEnabled(false);
                 customView.findViewById(R.id.ajouter).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -111,6 +113,7 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                         }
 
                         if(!titre.isEmpty()&&!description.isEmpty()){
+                            ((Button) customView.findViewById(R.id.ajouter)).setEnabled(false);
                             final PointDinteret p = new PointDinteret();
                             p.setDateCréation(new Date());
                             p.setNom(titre);
@@ -139,6 +142,8 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     pointsDInteretsCloudEndPoint.child(key).setValue(p);
+                                    selectedImage=null;
+
                                     mPopupWindow.dismiss();
                                 }
                             });
@@ -161,6 +166,8 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                      selectedImage =  (Bitmap) imageReturnedIntent.getExtras().get("data");
                     ((ImageView) customView.findViewById(R.id.lieu_image)).setImageBitmap(selectedImage);
                     customView.findViewById(R.id.lieu_image).setVisibility(View.VISIBLE);
+                    ((Button) customView.findViewById(R.id.ajouter)).setEnabled(true);
+
 
                 }
 
@@ -176,6 +183,8 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
 
                     ((ImageView) customView.findViewById(R.id.lieu_image)).setImageBitmap(selectedImage);
                     customView.findViewById(R.id.lieu_image).setVisibility(View.VISIBLE);
+                    ((Button) customView.findViewById(R.id.ajouter)).setEnabled(true);
+
 
                 }
                 break;
