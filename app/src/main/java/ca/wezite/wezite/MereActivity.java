@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import ca.wezite.wezite.R;
 import ca.wezite.wezite.service.MenuService;
@@ -25,6 +26,7 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
     protected NavigationView nav;
     protected DatabaseReference mDatabase;
     protected FirebaseStorage mStorage;
+    protected StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +34,7 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
         mDatabase =  FirebaseDatabase.getInstance().getReference();
         mWeziteboot = new WeziteBoot();
         mStorage = FirebaseStorage.getInstance();
+        storageReference = mStorage.getReference();
     }
 
     @Override

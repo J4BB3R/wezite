@@ -23,6 +23,8 @@ public class PointDinteret {
 
     private Date dateCréation;
 
+    private String userId;
+
     public PointDinteret() {
     }
 
@@ -104,6 +106,14 @@ public class PointDinteret {
 
     public void setAuteur(String auteur) {
         this.auteur = auteur;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     @Override

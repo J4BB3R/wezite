@@ -5,9 +5,11 @@
     <string name="googleAcc">Se connecter avec Google+</string>
     <string name="home">Accueil</string>
     <string name="profil">Profil</string>
-    <string name="ajoute">Ajouter</string>
+    <string name="ajoute">Ajouter point d\'intérêt</string>
     <string name="params">Parametres</string>
     <string name="deconn">Deconnexion</string>
     <string name="informations_generales">⇥ Informations générales</string>
     <string name="description">Description</string>
+    <string name="image">Image</string>
+    <string name="nouveau_point_interet">Nouveau point d\'intérêt</string>
 </resources>
