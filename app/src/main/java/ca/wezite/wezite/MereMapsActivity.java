@@ -1,6 +1,10 @@
 package ca.wezite.wezite;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,12 +14,16 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -51,6 +59,12 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
 
     protected List<PointDinteret> pointDinteretList = new ArrayList<>();
     protected PointDinteret pointAPromite;
+    protected LocationListener altListener;
+
+    protected String channelId = "wezite-position-tracker";
+    protected NotificationManager notificationManager;
+    protected NotificationChannel notificationChannel;
+    protected static boolean notified=false;
 
 
     @Override
@@ -85,8 +99,14 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
-
-
+        notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationChannel = notificationManager.getNotificationChannel(channelId);
+        if (notificationChannel == null) {
+            notificationChannel = new NotificationChannel(channelId, "wezite channel", NotificationManager.IMPORTANCE_HIGH);
+            notificationChannel.setLightColor(Color.YELLOW); //Set if it is necesssary
+            notificationChannel.enableVibration(true); //Set if it is necesssary
+            notificationManager.createNotificationChannel(notificationChannel);
+        }
     }
 
     @Override
@@ -98,7 +118,7 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
             // TODO: Afficher message d'erreur
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, this);
     }
 
     private void enableMyLocationIfPermitted() {
@@ -113,21 +133,21 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
         } else if (mMap != null) {
             mMap.setMyLocationEnabled(true);
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            Criteria criteria = new Criteria();
 
-            Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-            if (location != null)
-            {
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-                        .zoom(17)                   // Sets the zoom
-                        .build();                   // Creates a CameraPosition from the builder
-                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+            LatLng pos;
+            if(getIntent().getStringExtra("x")==null && getIntent().getStringExtra("y")==null) {
+                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+                pos = new LatLng(location.getLatitude(), location.getLongitude());
+            } else {
+                pos = new LatLng(new Double(getIntent().getStringExtra("x")),new Double(getIntent().getStringExtra("y")));
             }
-
-            }
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(pos)      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
     }
 
     @Override
@@ -141,7 +161,6 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
                         location.getLongitude(), Double.parseDouble(pointDinteret.getxCoord()),
                         Double.parseDouble(pointDinteret.getyCoord()), distance);
                 if(distance[0]<20){
-
                     pointAPromite=pointDinteret;
                     isPointAPromite=true;
                 }
@@ -181,4 +200,79 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
         startActivity(intent);
     }
 
+    @Override
+    protected void onStop() {
+        super.onPause();
+        locationManager.removeUpdates(this);
+        altListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                if(pointDinteretList!=null){
+                    int count = 0;
+                    for(PointDinteret pointDinteret : pointDinteretList){
+                        float[] distance= new float[1];
+                        Location.distanceBetween(location.getLatitude(),
+                                location.getLongitude(), Double.parseDouble(pointDinteret.getxCoord()),
+                                Double.parseDouble(pointDinteret.getyCoord()), distance);
+                        if(distance[0]<20){
+                            count++;
+                            if(!notified){
+                                Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
+                                resultIntent.putExtra("x", pointDinteret.getxCoord());
+                                resultIntent.putExtra("y", pointDinteret.getyCoord());
+                                resultIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                PendingIntent contentIntent = PendingIntent.getActivity(getApplicationContext(), 0, resultIntent, Intent.FLAG_ACTIVITY_NEW_TASK);
+                                Notification notif = new Notification.Builder(getApplicationContext(),channelId)
+                                        .setSmallIcon(R.drawable.logo)
+                                        .setContentTitle("Cliquez pour ouvrir la carte")
+                                        .setContentText("Le point '"+pointDinteret.getNom()+"' est proche de vous !")
+                                        .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                                        .setContentIntent(contentIntent)
+                                        .build();
+                                notificationManager.notify(0, notif);
+                                notified=true;
+                            }
+                        }
+                    }
+                    if(count==0 && notified) {
+                        notificationManager.cancel(0);
+                        notified=false;
+                    }
+                }
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {}
+
+            @Override
+            public void onProviderEnabled(String provider) {}
+
+            @Override
+            public void onProviderDisabled(String provider) {}
+        };
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 5, altListener);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        locationManager.removeUpdates(altListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, this);
+        Log.i("Cul",getIntent().getStringExtra("x")+"");
+        if(getIntent().getStringExtra("x")!=null && getIntent().getStringExtra("y")!=null) {
+            LatLng pos = new LatLng(new Double(getIntent().getStringExtra("x")), new Double(getIntent().getStringExtra("y")));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(pos)      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
 }

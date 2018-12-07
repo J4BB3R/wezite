@@ -56,6 +56,7 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         Intent serviceIntent = new Intent(this, MenuService.class);
         serviceIntent.putExtra("id", menuItem.getItemId());
+        serviceIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT); // Comes with android:launchMode="singleTask" and it prevent app to create new activities when navigate
         startService(serviceIntent);
         mDrawer.closeDrawers();
         return true;

@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Wezite</string>
     <string name="title_activity_visite">Visite</string>
-    <string name="parcours">parcours</string>
+    <string name="info_parcours">Infos parcours</string>
+    <string name="parcours">Parcours</string>
     <string name="googleAcc">Se connecter avec Google+</string>
     <string name="home">Accueil</string>
     <string name="profil">Profil</string>
