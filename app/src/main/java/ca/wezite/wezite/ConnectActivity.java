@@ -51,6 +51,7 @@ public class ConnectActivity extends Activity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if(firebaseAuth.getCurrentUser() != null){
+                    bar.setVisibility(View.GONE);
                     startActivity(new Intent(ConnectActivity.this, HomeActivity.class));
                 }
             }

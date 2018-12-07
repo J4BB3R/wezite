@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import ca.wezite.wezite.AjoutParcoursActivity;
 import ca.wezite.wezite.AjoutPointInteretActivity;
 import ca.wezite.wezite.HomeActivity;
+import ca.wezite.wezite.ParamsActivity;
 import ca.wezite.wezite.ParcoursListActivity;
 import ca.wezite.wezite.ProfileActivity;
 import ca.wezite.wezite.R;
@@ -45,7 +46,7 @@ public class MenuService extends Service {
                 startActivity(new Intent(this, AjoutParcoursActivity.class));
                 break;
             case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(this, ParamsActivity.class));
                 break;
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();

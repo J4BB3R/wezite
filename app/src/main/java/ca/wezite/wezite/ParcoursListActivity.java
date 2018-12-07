@@ -40,6 +40,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
     private LocationManager locationManager;
     private Location location;
     private SeekBar simpleSeek;
+    private SeekBar dureeSeek;
     private TextView resulTxt;
 
     private List<Parcours> parcourListBuff = new ArrayList<>();
@@ -80,17 +81,6 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
 
         resulTxt = (TextView) findViewById(R.id.resultTxt);
 
-        /*
-        for(int i=0;i<12;i++){
-            Parcours p = new Parcours();
-            p.setType("Culture");
-            p.setName("Csdfsdfsdf");
-            p.setDescription("dfgdsfgfdsgfdsgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdfgsdf");
-            p.setDistance(2600);
-            parcourList.add(p);
-        }
-        */
-
 
         simpleSeek = (SeekBar)findViewById(R.id.distance);
         final TextView simpleSeekValue = (TextView) findViewById(R.id.distanceValueTxt);
@@ -103,6 +93,29 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
                     simpleSeekValue.setText("<1");
                 } else {
                     simpleSeekValue.setText(String.valueOf(progress));
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) { }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                prepareDatas();
+            }
+        });
+
+        dureeSeek = (SeekBar)findViewById(R.id.duree);
+        final TextView dureeSeekValue = (TextView) findViewById(R.id.dureeValueTxt);
+
+        dureeSeek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener(){
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(progress==0){
+                    dureeSeekValue.setText("<10");
+                } else {
+                    dureeSeekValue.setText(String.valueOf(progress+10));
                 }
             }
 
@@ -165,8 +178,11 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
                         Double.parseDouble(par.getListePoints().get(0).getyCoord()), distance);
                 par.setDistance(distance[0]);
                 if(distance[0]<=simpleSeek.getProgress()*1000){
-                    parcourList.add(par); //TODO trie par choix
-                    resulTxt.setText(mAdapter.getItemCount()+" Résultats"); //TODO Fix Page scroll
+                    Log.i("Cul", par.getDuree()+"");
+                    if(par.getDuree()/60 <= (dureeSeek.getProgress()+10)){
+                        parcourList.add(par); //TODO trie par choix
+                        resulTxt.setText(mAdapter.getItemCount()+" Résultats"); //TODO Fix Page scroll
+                    }
                 }
             }
         }

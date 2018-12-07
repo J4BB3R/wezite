@@ -2,6 +2,8 @@ package ca.wezite.wezite.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,12 +13,18 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.wezite.wezite.HomeActivity;
 import ca.wezite.wezite.InfosParcoursActivity;
 import ca.wezite.wezite.R;
+import ca.wezite.wezite.async.DownloadImageTask;
 import ca.wezite.wezite.model.Parcours;
 
 public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.VignetteHolder> {
@@ -52,11 +60,30 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
     }
 
     @Override
-    public void onBindViewHolder(VignetteHolder holder, int position) {
+    public void onBindViewHolder(final VignetteHolder holder, int position) {
         final Parcours parcours = parcoursList.get(position);
         holder.title.setText(parcours.getName());
         holder.desc.setText(parcours.getDescription());
         holder.duree.setText(((int)parcours.getDuree()/60)+" min");
+
+        try {
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images").child(parcours.getImgPath());
+            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    new DownloadImageTask((ImageView) holder.img)
+                            .execute(uri.toString());
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        } catch(Exception e){
+            Log.e("ImageAsyncTask","ImgPath equals Null.");
+        }
+
         int distance = (int)parcours.getDistance();
         if(distance >= 2500){
             holder.distance.setText(Double.toString((distance-distance%100)/1000.0)+" Km");

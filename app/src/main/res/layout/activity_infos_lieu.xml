@@ -8,7 +8,7 @@
     tools:layout_editor_absoluteY="25dp"
     android:id="@+id/activity_demarrage">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
@@ -177,7 +177,7 @@
         </LinearLayout>
 
 
-    </RelativeLayout>
+    </ScrollView>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -186,9 +186,6 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:menu="@menu/nav_menu" />
-
-
-
 
 </android.support.v4.widget.DrawerLayout>
 

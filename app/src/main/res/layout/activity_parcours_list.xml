@@ -8,11 +8,10 @@
     tools:layout_editor_absoluteY="25dp"
     android:id="@+id/parcourList">
 
-    <GridLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:rowCount="2"
-        android:columnCount="1"
+        android:orientation="vertical"
         android:elevation="2dp">
 
         <LinearLayout
@@ -77,6 +76,56 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_column="4"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/dureeTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="20dp"
+                    android:textColor="@color/textLight"
+                    android:text="Durée : " />
+
+                <SeekBar
+                    android:id="@+id/duree"
+                    android:layout_height="wrap_content"
+                    android:layout_width="fill_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="8dp"
+                    android:max="170"
+                    android:progress="170"
+                    android:progressTint="@color/colorPrimary"
+                    android:thumbTint="@color/colorPrimary" />
+
+                <TextView
+                    android:id="@+id/dureeValueTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:layout_marginLeft="10dp"
+                    android:textSize="20dp"
+                    android:textColor="@color/colorPrimary"
+                    android:text="180" />
+
+                <TextView
+                    android:id="@+id/dureeMetricTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:layout_marginLeft="5dp"
+                    android:textSize="20dp"
+                    android:textColor="@color/textLight"
+                    android:text="min" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_row="0"
                 android:layout_column="0">
                 <TextView
@@ -98,12 +147,12 @@
                     android:textColor="@color/colorPrimary"/>
             </LinearLayout>
         </LinearLayout>
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/parcour_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="vertical" >
+            android:scrollbars="vertical"
+            android:layout_margin="10dp">
         </android.support.v7.widget.RecyclerView>
 
         <TextView
@@ -117,7 +166,7 @@
             android:textColor="@color/colorPrimaryDark"
             android:textSize="16dp" />
 
-    </GridLayout>
+    </LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

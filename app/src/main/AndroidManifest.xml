@@ -12,9 +12,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -39,7 +36,7 @@
         <activity
             android:name=".VisiteActivity"
             android:label="@string/title_activity_visite"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
         <activity
             android:name=".AjoutPointInteretActivity"
             android:label="@string/nouveau_point_interet"
@@ -51,35 +48,43 @@
         <activity
             android:name=".AjoutParcoursActivity"
             android:label="@string/nouveau_parcours"
-            />
+            android:launchMode="singleTask"/>
         <activity
             android:name=".ConnectActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ParcoursListActivity"
-            android:launchMode="singleTask"
-            android:label="@string/parcours"/>
-        <activity android:name=".InfosLieuActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".ProfileActivity"
-            android:launchMode="singleTask"
-            android:label="@string/profil"/>
-        <activity android:name=".InfosParcoursActivity"
+        <activity
+            android:name=".ParcoursListActivity"
+            android:label="@string/parcours"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".InfosLieuActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ProfileActivity"
+            android:label="@string/profil"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".InfosParcoursActivity"
             android:configChanges="orientation|screenSize"
-            android:launchMode="singleTask"
-            android:label="@string/info_parcours"/>
-        
+            android:label="@string/info_parcours"
+            android:launchMode="singleTask"/>
+
         <service
             android:name=".service.MenuService"
             android:enabled="true"
             android:exported="true"
-            android:launchMode="singleTask"/>
+            android:launchMode="singleTask" />
 
+        <activity android:name=".ParamsActivity"
+            android:label="@string/params"
+            android:launchMode="singleTask"/>
     </application>
 
 </manifest>

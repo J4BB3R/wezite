@@ -18,8 +18,6 @@ import ca.wezite.wezite.utils.WeziteBoot;
 
 public class HomeActivity extends MereMapsActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.setLayout(R.layout.activity_visite);
@@ -32,10 +30,4 @@ public class HomeActivity extends MereMapsActivity implements NavigationView.OnN
         mMenu.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-
-
-
-
-    
 }
-
