@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.text.Layout;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -51,17 +53,26 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
 
     protected List<PointDinteret> pointDinteretList = new ArrayList<>();
     protected PointDinteret pointAPromite;
+    private int layout;
+
+    private Marker marker;
 
 
+
+    public void setLayout(int layout){
+        this.layout=layout;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_visite);
+        setContentView(layout);
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         playButton = (FloatingActionButton) findViewById(R.id.afficher_details);
-        playButton.hide();
+        if(playButton!=null){
+            playButton.hide();
+        }
 
         mWeziteboot.checkFirebaseAuth(this, findViewById(R.id.map)); // DO NOT FORGET PLZZZ
 
@@ -74,7 +85,8 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
                     PointDinteret pointDInteret = noteSnapshot.getValue(PointDinteret.class);
                     LatLng point1 = new LatLng(Double.valueOf(pointDInteret.getxCoord()), Double.valueOf(pointDInteret.getyCoord()));
                     if (mMap != null && pointDInteret != null)
-                        mMap.addMarker(new MarkerOptions().position(point1).title(pointDInteret.getNom()));
+                        marker = mMap.addMarker(new MarkerOptions().position(point1).title(pointDInteret.getNom()));
+                        marker.setTag(pointDInteret);
                     pointDinteretList.add(pointDInteret);
                 }
 

@@ -12,4 +12,6 @@
     <string name="description">Description</string>
     <string name="image">Image</string>
     <string name="nouveau_point_interet">Nouveau point d\'intérêt</string>
+    <string name="ajouter_parcours">Ajouter parcours</string>
+    <string name="nouveau_parcours">Nouveau parcours</string>
 </resources>

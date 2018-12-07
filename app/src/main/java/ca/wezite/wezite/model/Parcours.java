@@ -42,6 +42,16 @@ public class Parcours {
 
     private String type;
 
+    private String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
+
     public String getType() {
         return type;
     }

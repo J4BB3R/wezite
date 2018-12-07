@@ -43,6 +43,7 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.setLayout(R.layout.activity_visite);
         super.onCreate(savedInstanceState);
         mDrawer = findViewById(R.id.home);
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
@@ -63,7 +64,6 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
         {
             @Override
             public void onMapClick(final LatLng latLng) {
-                android.util.Log.i("onMapClick", "Horray!");
                 LayoutInflater inflater = (LayoutInflater) getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE);
                 customView = inflater.inflate(R.layout.popup_creer_point_interet,null);
 
@@ -131,7 +131,7 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                             p.setImgPath(imgPath);
 
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            selectedImage.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                            selectedImage.compress(Bitmap.CompressFormat.PNG, 100, baos);
                             UploadTask uploadTask = imgRef.putBytes(baos.toByteArray());
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override

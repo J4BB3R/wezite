@@ -43,6 +43,10 @@
             android:name=".AjoutPointInteretActivity"
             android:label="@string/nouveau_point_interet"
             />
+        <activity
+            android:name=".AjoutParcoursActivity"
+            android:label="@string/nouveau_parcours"
+            />
         <activity android:name=".HomeActivity" />
         <activity
             android:name=".ConnectActivity"

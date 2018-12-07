@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import ca.wezite.wezite.AjoutParcoursActivity;
 import ca.wezite.wezite.AjoutPointInteretActivity;
 import ca.wezite.wezite.HomeActivity;
 import ca.wezite.wezite.ParcoursListActivity;
@@ -39,6 +40,9 @@ public class MenuService extends Service {
                 break;
             case R.id.nav_parcours:
                 startActivity(new Intent(this, ParcoursListActivity.class));
+                break;
+            case R.id.nav_add_parcours:
+                startActivity(new Intent(this, AjoutParcoursActivity.class));
                 break;
             case R.id.nav_settings:
                 Toast.makeText(this, "Settings", Toast.LENGTH_LONG).show();

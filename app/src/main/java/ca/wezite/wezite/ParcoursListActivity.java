@@ -7,16 +7,11 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,22 +19,16 @@ import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ca.wezite.wezite.model.Parcours;
-import ca.wezite.wezite.model.PointDinteret;
-import ca.wezite.wezite.utils.WeziteBoot;
+import ca.wezite.wezite.utils.Constantes;
 import ca.wezite.wezite.view.ParcourListAdaptor;
 
 public class ParcoursListActivity extends MereActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -48,14 +37,6 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private Spinner spin;
-    private String[] arraySpinner = new String[]{
-            "Tous",
-            "Nature",
-            "Culture",
-            "Art",
-            "Histoire",
-            "Photographie"
-    };
     private LocationManager locationManager;
     private Location location;
     private SeekBar simpleSeek;
@@ -149,7 +130,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
             }
         });
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item, arraySpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item, Constantes.arraySpinner);
         adapter.setDropDownViewResource(R.layout.spinner_item);
         spin.setAdapter(adapter);
 
@@ -173,8 +154,8 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
 
     public void prepareDatas(){
         parcourList.clear();
-        String spinnerValue = arraySpinner[spin.getSelectedItemPosition()];
-        boolean check = arraySpinner[0].equals(spinnerValue);
+        String spinnerValue = Constantes.arraySpinner[spin.getSelectedItemPosition()];
+        boolean check = Constantes.arraySpinner[0].equals(spinnerValue);
 
         for(Parcours par: parcourListBuff){
             if(spinnerValue.equals(par.getType())||check){

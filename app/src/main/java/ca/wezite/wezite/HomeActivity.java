@@ -22,6 +22,8 @@ public class HomeActivity extends MereMapsActivity implements NavigationView.OnN
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.setLayout(R.layout.activity_visite);
+
         super.onCreate(savedInstanceState);
         mDrawer = findViewById(R.id.home);
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
