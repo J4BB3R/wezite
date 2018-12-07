@@ -126,10 +126,8 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                             p.setAuteur(user.getDisplayName());
                             p.setUserId(user.getUid());
-                            String imgPath = p.getUserId() + "-" +new Date();
+                            final String imgPath = p.getUserId() + "-" +new Date();
                             StorageReference imgRef = storageReference.child("images/"+ imgPath);
-                            p.setImgPath(imgPath);
-
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
                             selectedImage.compress(Bitmap.CompressFormat.PNG, 100, baos);
                             UploadTask uploadTask = imgRef.putBytes(baos.toByteArray());
@@ -142,10 +140,15 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     pointsDInteretsCloudEndPoint.child(key).setValue(p);
+                                    MereActivity.user.getListeIdPointsAjoutes().add(p.getId());
+                                    p.setImgPath(imgPath);
+                                    mDatabase.child("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(MereActivity.user);
                                     selectedImage=null;
 
                                     mPopupWindow.dismiss();
+                                    isListening=false;
                                     pointAPromite=p;
+
                                     afficherPlus(null);
                                 }
                             });

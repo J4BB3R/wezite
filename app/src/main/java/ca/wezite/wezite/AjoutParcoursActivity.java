@@ -173,12 +173,13 @@ public class AjoutParcoursActivity extends MereMapsActivity implements Navigatio
                     if(description.isEmpty()){
                         ((EditText) customView.findViewById (R.id.text_description_lieu)).setError("Valeur obligatoire");
                     }
-                    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                    FirebaseUser fbUser = FirebaseAuth.getInstance().getCurrentUser();
                     Parcours parcours = new Parcours();
-                    parcours.setNomCreateur(user.getDisplayName());
-                    parcours.setUid(user.getUid());
+                    parcours.setNomCreateur(fbUser.getDisplayName());
+                    parcours.setUid(fbUser.getUid());
                     parcours.setName(titre);
                     parcours.setDescription(description);
+
                     parcours.setType(Constantes.TYPE_SPINNER[spin.getSelectedItemPosition()]);
                     final ParcoursAsyncCreator directionsReader = new ParcoursAsyncCreator();
                     directionsReader.setListPointsDinterets(pointDinteretList);

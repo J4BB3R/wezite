@@ -33,7 +33,7 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
     protected DatabaseReference mDatabase;
     protected FirebaseStorage mStorage;
     protected StorageReference storageReference;
-    protected static User user;
+    public static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

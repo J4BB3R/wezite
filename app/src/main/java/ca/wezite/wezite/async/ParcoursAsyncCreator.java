@@ -2,6 +2,7 @@ package ca.wezite.wezite.async;
 
 import android.os.AsyncTask;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -13,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ca.wezite.wezite.MereActivity;
 import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.PointDinteret;
 import ca.wezite.wezite.model.PointParcours;
@@ -49,6 +51,8 @@ public class ParcoursAsyncCreator extends AsyncTask<String, Void, Boolean> {
         DatabaseReference mDatabase =  FirebaseDatabase.getInstance().getReference();
         DatabaseReference parcoursCloudEndPoint = mDatabase.child("parcours");
         parcoursCloudEndPoint.child(parcours.getId()).setValue(parcours);
+        MereActivity.user.getListIdsParcoursAjoutes().add(parcours.getId());
+        mDatabase.child("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(MereActivity.user);
        return true;
     }
 

@@ -63,6 +63,7 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
     protected PointDinteret pointAPromite;
     private int layout;
     protected LocationListener altListener;
+    protected boolean isListening = true;
 
     private Marker marker;
     protected List<Marker> markerList = new ArrayList<>();
@@ -181,8 +182,11 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
                         location.getLongitude(), Double.parseDouble(pointDinteret.getxCoord()),
                         Double.parseDouble(pointDinteret.getyCoord()), distance);
                 if(distance[0]<20){
-                    pointAPromite=pointDinteret;
-                    isPointAPromite=true;
+                    if(isListening){
+                        pointAPromite=pointDinteret;
+                        isPointAPromite=true;
+                    }
+
                 }
             }
         }

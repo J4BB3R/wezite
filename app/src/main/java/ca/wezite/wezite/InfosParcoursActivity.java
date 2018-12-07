@@ -78,7 +78,7 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
 
         final Switch sw = findViewById(R.id.switchB);
 
-        if(user.getUserP().contains(par)){
+        if(user.getUserP() != null && user.getUserP().contains(par)){
             sw.setChecked(true);
         }
 
