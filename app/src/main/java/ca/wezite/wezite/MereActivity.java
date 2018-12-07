@@ -42,18 +42,20 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
         mWeziteboot = new WeziteBoot();
         mStorage = FirebaseStorage.getInstance();
         storageReference = mStorage.getReference();
+        if(user == null){
+            mDatabase.child("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot data) {
+                    user = data.getValue(User.class);
+                }
 
-        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot data) {
-                user = data.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue(User.class);
-            }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                }
+            });
+        }
 
-            }
-        });
     }
 
     @Override

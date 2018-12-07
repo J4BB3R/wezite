@@ -21,7 +21,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -31,6 +34,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import ca.wezite.wezite.model.Parcours;
+import ca.wezite.wezite.model.User;
 import ca.wezite.wezite.utils.Constantes;
 
 public class InfosParcoursActivity extends MereActivity implements NavigationView.OnNavigationItemSelectedListener, OnMapReadyCallback, LocationListener {
@@ -71,6 +76,23 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
         par = getIntent().getStringExtra("id_parcours");
         readOnDB();
 
+        final Switch sw = findViewById(R.id.switchB);
+
+        if(user.getUserP().contains(par)){
+            sw.setChecked(true);
+        }
+
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    user.addUserP(par);
+                } else {
+                    user.getUserP().remove(par);
+                }
+                mDatabase.child("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
+
+            }
+        });
         FloatingActionButton btn = findViewById(R.id.floating);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,6 +125,7 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 TextView lis = findViewById(R.id.listPI);
                 TextView ptsRem = findViewById(R.id.ptsRemarq);
                 TextView desc = findViewById(R.id.descParcour);
+                Switch sw = findViewById(R.id.switchB);
 
                 parcours = data.child("parcours/"+par).getValue(Parcours.class);
 

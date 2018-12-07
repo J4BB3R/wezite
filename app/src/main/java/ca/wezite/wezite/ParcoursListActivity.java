@@ -178,7 +178,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
                         Double.parseDouble(par.getListePoints().get(0).getyCoord()), distance);
                 par.setDistance(distance[0]);
                 if(distance[0]<=simpleSeek.getProgress()*1000){
-                    Log.i("Cul", par.getDuree()+"");
+
                     if(par.getDuree()/60 <= (dureeSeek.getProgress()+10)){
                         parcourList.add(par); //TODO trie par choix
                         resulTxt.setText(mAdapter.getItemCount()+" Résultats"); //TODO Fix Page scroll
