@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -21,8 +22,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DataSnapshot;
@@ -41,6 +44,7 @@ import ca.wezite.wezite.utils.Constantes;
 public class VisiteActivity extends MereMapsActivity implements OnMapReadyCallback, LocationListener, NavigationView.OnNavigationItemSelectedListener {
 
     private DatabaseReference parcoursCloudEndPoint;
+    Parcours parcours;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,8 @@ public class VisiteActivity extends MereMapsActivity implements OnMapReadyCallba
         parcoursCloudEndPoint.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Parcours parcours = dataSnapshot.getValue(Parcours.class);
+                parcours = dataSnapshot.getValue(Parcours.class);
+                updateMarkers();
                 drawPrimaryLinePath(parcours.getListePoints());
             }
 
@@ -67,6 +72,7 @@ public class VisiteActivity extends MereMapsActivity implements OnMapReadyCallba
         nav.setNavigationItemSelectedListener(this);
         mDrawer.addDrawerListener(mMenu);
         mMenu.syncState();
+        
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -93,5 +99,19 @@ public class VisiteActivity extends MereMapsActivity implements OnMapReadyCallba
     @Override
     public void onMapReady(GoogleMap googleMap) {
        super.onMapReady(googleMap);
+    }
+
+    @Override
+    protected void updateMarkers(){
+        if(parcours != null && markerList != null){
+            for(Marker m : markerList){
+                PointDinteret point = (PointDinteret) m.getTag();
+                String firstPointId = point.getId();
+                if(parcours.getListIdPointsInterets().get(0).equals(firstPointId)){
+                    m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+
+                }
+            }
+        }
     }
 }

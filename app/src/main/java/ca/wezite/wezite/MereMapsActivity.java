@@ -65,6 +65,7 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
     protected LocationListener altListener;
 
     private Marker marker;
+    protected List<Marker> markerList = new ArrayList<>();
     protected String channelId = "wezite-position-tracker";
     protected NotificationManager notificationManager;
     protected NotificationChannel notificationChannel;
@@ -101,10 +102,14 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
                     if (mMap != null && pointDInteret != null)
                         marker = mMap.addMarker(new MarkerOptions().position(point1).title(pointDInteret.getNom()));
                         marker.setTag(pointDInteret);
+                        markerList.add(marker);
                     pointDinteretList.add(pointDInteret);
                 }
+                updateMarkers();
 
             }
+
+
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -119,6 +124,9 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
             notificationChannel.enableVibration(true); //Set if it is necesssary
             notificationManager.createNotificationChannel(notificationChannel);
         }
+    }
+
+    protected void updateMarkers() {
     }
 
     @Override
@@ -276,7 +284,6 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
         super.onRestart();
         locationManager.removeUpdates(altListener);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, this);
-        Log.i("Cul",getIntent().getStringExtra("x")+"");
         if(getIntent().getStringExtra("x")!=null && getIntent().getStringExtra("y")!=null) {
             LatLng pos = new LatLng(new Double(getIntent().getStringExtra("x")), new Double(getIntent().getStringExtra("y")));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
