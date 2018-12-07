@@ -145,6 +145,8 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                                     selectedImage=null;
 
                                     mPopupWindow.dismiss();
+                                    pointAPromite=p;
+                                    afficherPlus(null);
                                 }
                             });
 

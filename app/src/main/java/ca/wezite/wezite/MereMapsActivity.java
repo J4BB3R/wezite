@@ -234,7 +234,7 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
                         Location.distanceBetween(location.getLatitude(),
                                 location.getLongitude(), Double.parseDouble(pointDinteret.getxCoord()),
                                 Double.parseDouble(pointDinteret.getyCoord()), distance);
-                        if(distance[0]<20){
+                        if(distance[0]<100){
                             count++;
                             if(!notified){
                                 Intent resultIntent = new Intent(getApplicationContext(), HomeActivity.class);
