@@ -8,18 +8,25 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
+import ca.wezite.wezite.async.DownloadImageTask;
 import ca.wezite.wezite.model.User;
 
 
@@ -131,14 +138,33 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
                 final TextView toto = rowView.findViewById(R.id.titleListProfil);
                 final TextView tata = rowView.findViewById(R.id.descListProfil);
                 final TextView titi = rowView.findViewById(R.id.typeListProfil);
+                final ImageView tutu = rowView.findViewById(R.id.imageListProfil);
                 mDatabase.child(type).child(id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(tab == 2) {
                             toto.setText(dataSnapshot.child("nom").getValue(String.class));
+                            tutu.setImageDrawable(getResources().getDrawable(R.drawable.pi));
                         } else {
                             toto.setText(dataSnapshot.child("name").getValue(String.class));
                             titi.setText(dataSnapshot.child("type").getValue(String.class));
+                            try {
+                                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images").child(dataSnapshot.child("imgPath").getValue(String.class));
+                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        new DownloadImageTask(tutu)
+                                                .execute(uri.toString());
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception exception) {
+                                        // Handle any errors
+                                    }
+                                });
+                            } catch(Exception e){
+                                Log.e("ImageAsyncTask","ImgPath equals Null.");
+                            }
                         }
                         tata.setText(dataSnapshot.child("description").getValue(String.class));
 
