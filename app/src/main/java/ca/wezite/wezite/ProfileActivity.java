@@ -1,14 +1,24 @@
 package ca.wezite.wezite;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.net.URI;
+
+import ca.wezite.wezite.async.DownloadImageTask;
+import ca.wezite.wezite.model.User;
 
 
 public class ProfileActivity extends MereActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -27,18 +37,37 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
         mMenu.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TextView nom = findViewById(R.id.nomProfil);
-        TextView mail = findViewById(R.id.mailProfil);
-        ImageView img = findViewById(R.id.photoProfile);
+        final TextView nom = findViewById(R.id.nomProfil);
+        final TextView mail = findViewById(R.id.mailProfil);
+        final ImageView img = findViewById(R.id.photoProfile);
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String id_profil = getIntent().getStringExtra("id_profil");
 
-        nom.setText(user.getDisplayName());
-        mail.setText(user.getEmail());
-        Uri st = user.getPhotoUrl();
-        Picasso.get()
-                .load(st)
-                .into(img);
+        if(id_profil==null){
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            nom.setText(user.getDisplayName());
+            mail.setText(user.getEmail());
+            Uri st = user.getPhotoUrl();
+            Picasso.get()
+                    .load(st)
+                    .into(img);
+        } else {
+            mDatabase.child("users/").child(id_profil).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    User user = dataSnapshot.getValue(User.class);
+                    nom.setText(user.getName());
+                    mail.setText(user.getEmail());
+                    new DownloadImageTask((ImageView) img).execute(user.getPhoto());
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
 
 

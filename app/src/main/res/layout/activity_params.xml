@@ -15,7 +15,7 @@
         android:layout_margin="30dp">
 
         <Switch
-            android:id="@+id/switch2"
+            android:id="@+id/switchNotif"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Activer les notifications :"

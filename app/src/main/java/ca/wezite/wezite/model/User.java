@@ -12,6 +12,28 @@ public class User {
 
     private List<String> userP;
 
+    private boolean notif;
+
+    private String photo;
+
+    private String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     public boolean isNotif() {
         return notif;
     }
@@ -19,8 +41,6 @@ public class User {
     public void setNotif(boolean notif) {
         this.notif = notif;
     }
-
-    private boolean notif;
 
     private List<String> listIdsParcoursAjoutes;
 

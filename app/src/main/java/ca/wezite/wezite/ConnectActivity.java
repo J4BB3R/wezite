@@ -62,9 +62,12 @@ public class ConnectActivity extends Activity {
                     bar.setVisibility(View.GONE);
 
                     final DatabaseReference mDatabase =  FirebaseDatabase.getInstance().getReference();
+                    FirebaseUser cuser = firebaseAuth.getCurrentUser();
                     final User user = new User();
-                    user.setId(firebaseAuth.getCurrentUser().getUid());
-                    user.setEmail(firebaseAuth.getCurrentUser().getEmail());
+                    user.setId(cuser.getUid());
+                    user.setName(cuser.getDisplayName());
+                    user.setEmail(cuser.getEmail());
+                    user.setPhoto(cuser.getPhotoUrl().toString());
                     user.setNotif(true);
                     user.setUserP(null);
                     mDatabase.addListenerForSingleValueEvent( new ValueEventListener() {

@@ -65,12 +65,16 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
     protected LocationListener altListener;
     protected boolean isListening = true;
 
+    private boolean crashFlag=false;
+
     private Marker marker;
     protected List<Marker> markerList = new ArrayList<>();
     protected String channelId = "wezite-position-tracker";
     protected NotificationManager notificationManager;
     protected NotificationChannel notificationChannel;
     protected static boolean notified=false;
+
+    private Thread userHook;
 
 
 
@@ -91,6 +95,30 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
         }
 
         mWeziteboot.checkFirebaseAuth(this, findViewById(R.id.map)); // DO NOT FORGET PLZZZ
+
+        userHook = new Thread() {
+            @Override
+            public void run() {
+                while(true) {
+                    try {
+                        synchronized (userMutex){
+                            try {
+                                userMutex.wait();
+                                setAltListener(user.isNotif());
+                                if(!user.isNotif()){
+                                    notificationManager.cancel(0);
+                                }
+                            } catch (Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        };
+        userHook.start();
 
          pointsDInteretsCloudEndPoint = mDatabase.child("pointDInterets");
 
@@ -143,37 +171,60 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
     }
 
     private void enableMyLocationIfPermitted() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_FINE_LOCATION},
-                    Constantes.LOCATION_PERMISSION_REQUEST_CODE);
+        try {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        Constantes.LOCATION_PERMISSION_REQUEST_CODE);
 
-        } else if (mMap != null) {
-            mMap.setMyLocationEnabled(true);
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            } else if (mMap != null) {
+                mMap.setMyLocationEnabled(true);
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-            LatLng pos;
-            if(getIntent().getStringExtra("x")==null && getIntent().getStringExtra("y")==null) {
-                Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
-                pos = new LatLng(location.getLatitude(), location.getLongitude());
-            } else {
-                pos = new LatLng(new Double(getIntent().getStringExtra("x")),new Double(getIntent().getStringExtra("y")));
+                LatLng pos;
+                if (getIntent().getStringExtra("x") == null && getIntent().getStringExtra("y") == null) {
+                    Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(new Criteria(), false));
+                    pos = new LatLng(location.getLatitude(), location.getLongitude());
+                } else {
+                    pos = new LatLng(new Double(getIntent().getStringExtra("x")), new Double(getIntent().getStringExtra("y")));
+                }
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(pos)      // Sets the center of the map to location user
+                        .zoom(17)                   // Sets the zoom
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
             }
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(pos)      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        } catch (Exception e){
+            e.printStackTrace();
+            crashFlag=true;
         }
     }
 
     @Override
     public void onLocationChanged(Location location) {
         boolean isPointAPromite = false;
+
+        if(crashFlag){
+            try{
+                mMap.setMyLocationEnabled(true);
+                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                LatLng pos = new LatLng(location.getLatitude(), location.getLongitude());
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
+                CameraPosition cameraPosition = new CameraPosition.Builder()
+                        .target(pos)      // Sets the center of the map to location user
+                        .zoom(17)                   // Sets the zoom
+                        .build();                   // Creates a CameraPosition from the builder
+                mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                crashFlag=false;
+            } catch (Exception e){
+                e.printStackTrace();
+                Log.e("Locator", "WTF !!!");
+            }
+        }
 
         if(pointDinteretList!=null){
             for(PointDinteret pointDinteret : pointDinteretList){
@@ -228,7 +279,33 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
     protected void onStop() {
         super.onPause();
         locationManager.removeUpdates(this);
-        altListener = new LocationListener() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 5, altListener);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        locationManager.removeUpdates(altListener);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, this);
+        if(getIntent().getStringExtra("x")!=null && getIntent().getStringExtra("y")!=null) {
+            LatLng pos = new LatLng(new Double(getIntent().getStringExtra("x")), new Double(getIntent().getStringExtra("y")));
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(pos)      // Sets the center of the map to location user
+                    .zoom(17)                   // Sets the zoom
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+        }
+    }
+
+    private void setAltListener(boolean goGoPowerRanger){ // Doing the job often means doing it badly
+        altListener = goGoPowerRanger ? new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
                 if(pointDinteretList!=null){
@@ -273,29 +350,26 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
 
             @Override
             public void onProviderDisabled(String provider) {}
+        } : new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
         };
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 5, altListener);
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        locationManager.removeUpdates(altListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 100, 1, this);
-        if(getIntent().getStringExtra("x")!=null && getIntent().getStringExtra("y")!=null) {
-            LatLng pos = new LatLng(new Double(getIntent().getStringExtra("x")), new Double(getIntent().getStringExtra("y")));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(pos, 13));
-            CameraPosition cameraPosition = new CameraPosition.Builder()
-                    .target(pos)      // Sets the center of the map to location user
-                    .zoom(17)                   // Sets the zoom
-                    .build();                   // Creates a CameraPosition from the builder
-            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
     }
 }

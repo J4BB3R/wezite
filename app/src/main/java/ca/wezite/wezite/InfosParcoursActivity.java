@@ -126,6 +126,7 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 TextView ptsRem = findViewById(R.id.ptsRemarq);
                 TextView desc = findViewById(R.id.descParcour);
                 Switch sw = findViewById(R.id.switchB);
+                TextView auteur = findViewById(R.id.auteurText);
 
                 parcours = data.child("parcours/"+par).getValue(Parcours.class);
 
@@ -139,6 +140,17 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
 
                 type.setText(parcours.getType().toUpperCase());
                 duree.setText(time);
+
+
+                auteur.setText(parcours.getNomCreateur());
+                findViewById(R.id.auteurClick).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        intent.putExtra("id_profil", parcours.getUid());
+                        getApplicationContext().startActivity(intent);
+                    }
+                });
 
                 //Liste Point Interet
                 for(String ds : parcours.getListIdPointsInterets()){

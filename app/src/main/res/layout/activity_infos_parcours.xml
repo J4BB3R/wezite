@@ -72,45 +72,51 @@
             </android.support.v7.widget.CardView>
 
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:background="@color/textDark"
                 android:elevation="1dp"
                 android:padding="15dp">
 
-                <TextView
-                    android:id="@+id/prctTxt"
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_alignParentLeft="true"
-                    android:textColor="@color/colorPrimary"
-                    android:text="PARCOURS :"
-                    android:textSize="15sp" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/typeP"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="10dp"
-                    android:layout_toRightOf="@id/prctTxt"
-                    android:textColor="@color/titleExtra"
-                    android:textSize="15sp"
-                    android:text="CUL"/>
+                    <TextView
+                        android:id="@+id/prctTxt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_alignParentLeft="true"
+                        android:textColor="@color/colorPrimary"
+                        android:text="PARCOURS :"
+                        android:textSize="15sp" />
 
-                <TextView
-                    android:id="@+id/dureeP"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:layout_alignParentRight="true"
-                    android:textStyle="bold"
-                    android:textColor="@color/successColor"
-                    android:textSize="15sp"
-                    android:text="CUL"/>
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/typeP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_toRightOf="@id/prctTxt"
+                        android:textColor="@color/titleExtra"
+                        android:textSize="15sp"
+                        android:text="CUL"/>
+
+                    <TextView
+                        android:id="@+id/dureeP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="10dp"
+                        android:layout_alignParentRight="true"
+                        android:textStyle="bold"
+                        android:textColor="@color/successColor"
+                        android:textSize="15sp"
+                        android:text="CUL"/>
+                </RelativeLayout>
+            </LinearLayout>
 
 
             <ca.wezite.wezite.view.CustomScrollView
@@ -128,6 +134,36 @@
                         android:layout_width="match_parent"
                         android:layout_height="220dp"
                         tools:context=".InfosParcoursActivity" />
+
+                    <LinearLayout
+                        android:id="@+id/auteurClick"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:elevation="1dp"
+                        android:background="#fff">
+
+                        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                            android:id="@+id/photoProfileAuteur"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_alignParentTop="true"
+                            android:layout_centerHorizontal="true"
+                            android:layout_margin="10dp"
+                            android:background="@drawable/googleg_standard_color_18"
+                            app:civ_border_color="@color/colorPrimary"
+                            app:civ_border_width="2dp"
+                            app:srcCompat="@color/colorPrimary" />
+                        <TextView
+                            android:id="@+id/auteurText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CUL"
+                            android:layout_marginLeft="12dp"
+                            android:textSize="18sp"
+                            android:layout_gravity="center_vertical"
+                            android:textColor="@color/textDark"/>
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/descParcour"
