@@ -128,7 +128,7 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
                 break;
         }
         if(affichageList!=null) {
-            for (String id : affichageList) {
+            for (final String id : affichageList) {
                 View rowView = inflater.inflate(R.layout.list_profile, null);
                 // Add the new row before the add field button.
                 final TextView toto = rowView.findViewById(R.id.titleListProfil);
@@ -152,6 +152,16 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
 
                     }
                 });
+                if(tab!=2){
+                    rowView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(), InfosParcoursActivity.class);
+                            intent.putExtra("id_parcours", id);
+                            getApplicationContext().startActivity(intent);
+                        }
+                    });
+                }
                 listProfil.addView(rowView, listProfil.getChildCount() - 1);
             }
         }
