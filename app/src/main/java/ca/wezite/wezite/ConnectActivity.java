@@ -69,6 +69,8 @@ public class ConnectActivity extends Activity {
                     user.setEmail(cuser.getEmail());
                     user.setPhoto(cuser.getPhotoUrl().toString());
                     user.setNotif(true);
+                    user.setName(firebaseAuth.getCurrentUser().getDisplayName());
+                    user.setPhoto(""+ firebaseAuth.getCurrentUser().getPhotoUrl());
                     user.setUserP(null);
                     mDatabase.addListenerForSingleValueEvent( new ValueEventListener() {
                         @Override

@@ -44,11 +44,10 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
         String id_profil = getIntent().getStringExtra("id_profil");
 
         if(id_profil==null){
-            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-            nom.setText(user.getDisplayName());
+            nom.setText(user.getName());
             mail.setText(user.getEmail());
-            Uri st = user.getPhotoUrl();
+            Uri st = Uri.parse(user.getPhoto());
             Picasso.get()
                     .load(st)
                     .into(img);
@@ -56,10 +55,12 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
             mDatabase.child("users/").child(id_profil).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    User user = dataSnapshot.getValue(User.class);
-                    nom.setText(user.getName());
-                    mail.setText(user.getEmail());
-                    new DownloadImageTask((ImageView) img).execute(user.getPhoto());
+                    User user1 = dataSnapshot.getValue(User.class);
+                    nom.setText(user1.getName());
+                    mail.setText(user1.getEmail());
+                    Picasso.get()
+                            .load(user1.getPhoto())
+                            .into(img);
                 }
 
                 @Override
