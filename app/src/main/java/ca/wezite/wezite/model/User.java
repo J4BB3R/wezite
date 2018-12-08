@@ -1,8 +1,9 @@
 package ca.wezite.wezite.model;
 
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class User {
 
@@ -10,29 +11,25 @@ public class User {
 
     private String email;
 
-    private List<String> userP;
-
-    private boolean notif;
+    private String name;
 
     private String photo;
 
-    private String name;
+    private boolean notif;
 
-    public String getName() {
-        return name;
-    }
+    private List<String> userP;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    private List<String> listIdsParcoursAjoutes;
 
-    public String getPhoto() {
-        return photo;
-    }
+    private List<String> listeIdPointsAjoutes;
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
-    }
+    public String getName() { return name; }
+
+    public void setName(String name) { this.name = name; }
+
+    public String getPhoto() { return photo; }
+
+    public void setPhoto(String photo) { this.photo = photo; }
 
     public boolean isNotif() {
         return notif;
@@ -41,10 +38,6 @@ public class User {
     public void setNotif(boolean notif) {
         this.notif = notif;
     }
-
-    private List<String> listIdsParcoursAjoutes;
-
-    private List<String> listeIdPointsAjoutes;
 
     public List<String> getListeIdPointsAjoutes() {
         if (listeIdPointsAjoutes==null)
