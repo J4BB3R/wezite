@@ -18,11 +18,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
-import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.User;
 
 
