@@ -44,20 +44,17 @@
 
         <activity
             android:name=".VisiteActivity"
-            android:label="@string/title_activity_visite"
-            android:launchMode="singleTask" />
+            android:label="@string/title_activity_visite"/>
         <activity
             android:name=".AjoutPointInteretActivity"
-            android:label="@string/nouveau_point_interet"
-            android:launchMode="singleTask" />
+            android:label="@string/nouveau_point_interet"/>
         <activity android:name=".HomeActivity"
             android:launchMode="singleTask"
             android:label="@string/home"/>
             />
         <activity
             android:name=".AjoutParcoursActivity"
-            android:label="@string/nouveau_parcours"
-            android:launchMode="singleTask"/>
+            android:label="@string/nouveau_parcours"/>
         <activity
             android:name=".ConnectActivity"
             android:launchMode="singleTask"
@@ -70,26 +67,22 @@
         </activity>
         <activity
             android:name=".ParcoursListActivity"
-            android:label="@string/parcours"
-            android:launchMode="singleTask" />
+            android:label="@string/parcours"/>
         <activity
-            android:name=".InfosLieuActivity"
-            android:launchMode="singleTask" />
+            android:name=".InfosLieuActivity"/>
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/profil"
-            android:launchMode="singleTask" />
+            android:label="@string/profil"/>
         <activity
             android:name=".InfosParcoursActivity"
             android:configChanges="orientation|screenSize"
-            android:label="@string/info_parcours"
-            android:launchMode="singleTask"/>
+            android:label="@string/info_parcours"/>
 
         <service
             android:name=".service.MenuService"
             android:enabled="true"
             android:exported="true"
-            android:launchMode="singleTask" />
+            android:launchMode="singleTask"/>
 
         <activity android:name=".ParamsActivity"
             android:label="@string/params"
