@@ -20,6 +20,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
+        <provider
+            android:name="ca.wezite.wezite.utils.GenericFileProvider"
+            android:authorities="ca.wezite.wezite.utils"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

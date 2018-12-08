@@ -1,14 +1,17 @@
 package ca.wezite.wezite;
 
 import android.app.ActionBar;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,7 +32,9 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import ca.wezite.wezite.model.PointDinteret;
@@ -40,11 +45,16 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
     private PopupWindow mPopupWindow;
     private View customView;
     private Bitmap selectedImage;
+    private String mCurrentPhotoPath;
+    private Context ctx;
+    private Uri photoURI;
 
+    int MAX_IMAGE_SIZE = 1000 * 1024;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.setLayout(R.layout.activity_visite);
         super.onCreate(savedInstanceState);
+        ctx=this;
         mDrawer = findViewById(R.id.home);
         mMenu = new ActionBarDrawerToggle(this, mDrawer, R.string.app_name, R.string.app_name);
 
@@ -94,8 +104,26 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                 customView.findViewById(R.id.input_prendre_photo).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(takePicture, 0);
+                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        // Ensure that there's a camera activity to handle the intent
+                        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                            // Create the File where the photo should go
+                            File photoFile = null;
+                            try {
+                                photoFile = createImageFile();
+                            } catch (IOException ex) {
+                                // Error occurred while creating the File
+                            }
+                            // Continue only if the File was successfully created
+                            if (photoFile != null) {
+                                photoURI = FileProvider.getUriForFile(ctx,
+                                        "ca.wezite.wezite.utils",
+                                        photoFile);
+                                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                startActivityForResult(takePictureIntent, 0);
+                            }
+                        }
+
                     }
                 });
                 ((Button) customView.findViewById(R.id.ajouter)).setEnabled(false);
@@ -129,7 +157,7 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                             final String imgPath = p.getUserId() + "-" +new Date();
                             StorageReference imgRef = storageReference.child("images/"+ imgPath);
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            selectedImage.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                            selectedImage.compress(Bitmap.CompressFormat.PNG, 50, baos);
                             UploadTask uploadTask = imgRef.putBytes(baos.toByteArray());
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -168,11 +196,15 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
         switch(requestCode) {
             case 0:
                 if(resultCode == RESULT_OK){
-                     selectedImage =  (Bitmap) imageReturnedIntent.getExtras().get("data");
+
+                    try {
+                        selectedImage = MediaStore.Images.Media.getBitmap(this.getContentResolver(), photoURI);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     ((ImageView) customView.findViewById(R.id.lieu_image)).setImageBitmap(selectedImage);
                     customView.findViewById(R.id.lieu_image).setVisibility(View.VISIBLE);
                     ((Button) customView.findViewById(R.id.ajouter)).setEnabled(true);
-
 
                 }
 
@@ -195,6 +227,43 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                 break;
         }
     }
-    
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    /**
+     * reduces the size of the image
+     * @param image
+     * @param maxSize
+     * @return
+     */
+    public Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float)width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+        return Bitmap.createScaledBitmap(image, width, height, true);
+    }
+
 }
 
