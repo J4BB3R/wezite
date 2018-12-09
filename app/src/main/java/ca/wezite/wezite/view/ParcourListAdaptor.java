@@ -35,7 +35,7 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
     public class VignetteHolder extends RecyclerView.ViewHolder {
         public FrameLayout parentLayout;
         public ImageView img;
-        public TextView title, desc, distance, duree;
+        public TextView title, desc, distance, duree, percentageLike, percentageDislike;
 
         public VignetteHolder(View view) {
             super(view);
@@ -45,6 +45,8 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
             desc = (TextView) view.findViewById(R.id.descParcourVignette);
             distance = (TextView) view.findViewById(R.id.distanceParcourVignette);
             duree = (TextView) view.findViewById(R.id.dureeParcourVignette);
+            percentageLike = (TextView) view.findViewById(R.id.percentageLike);
+            percentageDislike = (TextView) view.findViewById(R.id.percentageDislike);
         }
     }
 
@@ -65,6 +67,17 @@ public class ParcourListAdaptor extends RecyclerView.Adapter<ParcourListAdaptor.
         holder.title.setText(parcours.getName());
         holder.desc.setText(parcours.getDescription());
         holder.duree.setText(((int)parcours.getDuree()/60)+" min");
+
+        int like=0;
+        int dislike=0;
+        if(parcours.getDislike()!=null){
+            dislike = parcours.getDislike().size();
+        }
+        if(parcours.getLike()!=null){
+            like = parcours.getLike().size();
+        }
+        holder.percentageLike.setText(String.valueOf(like));
+        holder.percentageDislike.setText(String.valueOf(dislike));
 
         try {
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images").child(parcours.getImgPath());

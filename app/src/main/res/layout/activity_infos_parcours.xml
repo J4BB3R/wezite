@@ -85,12 +85,30 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
+                    <ImageButton
+                        android:id="@+id/thumbUpParcour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginStart="7dp"
+                        android:background="#00000000"
+                        app:srcCompat="@drawable/ic_thumb_up_black_24dp" />
+
+                    <ImageButton
+                        android:id="@+id/thumbDownParcour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/thumbUpParcour"
+                        android:layout_marginStart="15dp"
+                        app:srcCompat="@drawable/ic_thumb_down_black_24dp"
+                        android:background="#00000000"/>
+
                     <TextView
                         android:id="@+id/prctTxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:layout_alignParentLeft="true"
+                        android:layout_toLeftOf="@id/typeP"
                         android:textColor="@color/colorPrimary"
                         android:text="PARCOURS :"
                         android:textSize="15sp" />
@@ -100,7 +118,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="10dp"
-                        android:layout_toRightOf="@id/prctTxt"
+                        android:layout_toLeftOf="@id/dureeP"
                         android:textColor="@color/titleExtra"
                         android:textSize="15sp"
                         android:text="CUL"/>
@@ -109,7 +127,7 @@
                         android:id="@+id/dureeP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="10dp"
+                        android:layout_marginStart="10dp"
                         android:layout_alignParentRight="true"
                         android:textStyle="bold"
                         android:textColor="@color/successColor"
@@ -145,14 +163,14 @@
 
                         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
                             android:id="@+id/photoProfileAuteur"
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:layout_alignParentTop="true"
                             android:layout_centerHorizontal="true"
                             android:layout_margin="10dp"
                             android:background="@drawable/googleg_standard_color_18"
                             app:civ_border_color="@color/colorPrimary"
-                            app:civ_border_width="2dp"
+                            app:civ_border_width="1dp"
                             app:srcCompat="@color/colorPrimary" />
                         <TextView
                             android:id="@+id/auteurText"

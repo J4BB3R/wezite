@@ -4,6 +4,7 @@ import android.graphics.Point;
 
 import org.w3c.dom.Comment;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Parcours {
@@ -43,6 +44,18 @@ public class Parcours {
     private String type;
 
     private String uid;
+
+    private HashMap<String,String> like;
+
+    private HashMap<String,String> dislike;
+
+    public HashMap<String,String> getDislike() { return dislike; }
+
+    public void setDislike(HashMap<String,String> dislike) { this.dislike = dislike; }
+
+    public HashMap<String,String> getLike() { return like; }
+
+    public void setLike(HashMap<String,String> like) { this.like = like; }
 
     public String getUid() {
         return uid;

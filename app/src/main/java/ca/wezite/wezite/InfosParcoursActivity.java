@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -22,6 +24,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +44,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.User;
@@ -50,10 +55,17 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
     protected GoogleMap mMap;
     protected View mMapFragment;
     private LatLng coord;
+    private Thread userHook;
 
     protected LocationManager locationManager;
     private Parcours parcours;
     private String par;
+
+    private boolean auteurCallback=false;
+    private boolean userCallback=false;
+
+    private boolean like=false;
+    private boolean dislike=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +114,66 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 startActivity(parc);
             }
         });
+
+        findViewById(R.id.auteurClick).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                intent.putExtra("id_profil", parcours.getUid());
+                getApplicationContext().startActivity(intent);
+            }
+        });
+
+        final ImageButton thumbUp = findViewById(R.id.thumbUpParcour);
+        final ImageButton thumbDown = findViewById(R.id.thumbDownParcour);
+
+        thumbUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(dislike){
+                    dislike=false;
+                    like=true;
+                    thumbUp.setColorFilter(getResources().getColor(R.color.likeColor),PorterDuff.Mode.SRC_ATOP);
+                    thumbDown.setColorFilter(getResources().getColor(R.color.thumbColor),PorterDuff.Mode.SRC_ATOP);
+
+                    mDatabase.child("parcours").child(parcours.getId()).child("dislike").child(user.getId()).removeValue();
+                    mDatabase.child("parcours").child(parcours.getId()).child("like").child(user.getId()).setValue(user.getId());
+
+                } else if(like){
+                    like=false;
+                    thumbUp.setColorFilter(getResources().getColor(R.color.thumbColor),PorterDuff.Mode.SRC_ATOP);
+                    mDatabase.child("parcours").child(parcours.getId()).child("like").child(user.getId()).removeValue();
+                } else {
+                    like=true;
+                    thumbUp.setColorFilter(getResources().getColor(R.color.likeColor),PorterDuff.Mode.SRC_ATOP);
+                    mDatabase.child("parcours").child(parcours.getId()).child("like").child(user.getId()).setValue(user.getId());
+                }
+            }
+        });
+        thumbDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(like){
+                    like=false;
+                    dislike=true;
+                    thumbDown.setColorFilter(getResources().getColor(R.color.likeColor),PorterDuff.Mode.SRC_ATOP);
+                    thumbUp.setColorFilter(getResources().getColor(R.color.thumbColor),PorterDuff.Mode.SRC_ATOP);
+
+                    mDatabase.child("parcours").child(parcours.getId()).child("like").child(user.getId()).removeValue();
+                    mDatabase.child("parcours").child(parcours.getId()).child("dislike").child(user.getId()).setValue(user.getId());
+
+                } else if(dislike){
+                    dislike=false;
+                    thumbDown.setColorFilter(getResources().getColor(R.color.thumbColor),PorterDuff.Mode.SRC_ATOP);
+                    mDatabase.child("parcours").child(parcours.getId()).child("dislike").child(user.getId()).removeValue();
+                } else {
+                    dislike=true;
+                    thumbDown.setColorFilter(getResources().getColor(R.color.likeColor),PorterDuff.Mode.SRC_ATOP);
+                    mDatabase.child("parcours").child(parcours.getId()).child("dislike").child(user.getId()).setValue(user.getId());
+                }
+            }
+        });
+
     }
     public String timeStoHMS(double num){
 
@@ -117,7 +189,7 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
         mDatabase.addValueEventListener(new ValueEventListener() {
 
             @Override
-            public void onDataChange(@NonNull DataSnapshot data) {
+            public void onDataChange(@NonNull final DataSnapshot data) {
                 TextView txt = findViewById(R.id.titreP);
                 TextView resum = findViewById(R.id.resumeP);
                 TextView type = findViewById(R.id.typeP);
@@ -127,6 +199,9 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 TextView desc = findViewById(R.id.descParcour);
                 Switch sw = findViewById(R.id.switchB);
                 TextView auteur = findViewById(R.id.auteurText);
+                final ImageView imgAuteur = findViewById(R.id.photoProfileAuteur);
+                final ImageButton thumbUp = findViewById(R.id.thumbUpParcour);
+                final ImageButton thumbDown = findViewById(R.id.thumbDownParcour);
 
                 parcours = data.child("parcours/"+par).getValue(Parcours.class);
 
@@ -141,16 +216,31 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 type.setText(parcours.getType().toUpperCase());
                 duree.setText(time);
 
-
                 auteur.setText(parcours.getNomCreateur());
-                findViewById(R.id.auteurClick).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
-                        intent.putExtra("id_profil", parcours.getUid());
-                        getApplicationContext().startActivity(intent);
-                    }
-                });
+
+                if(!auteurCallback){
+                    mDatabase.child("users/").addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            User user1 = dataSnapshot.child(parcours.getUid()).getValue(User.class);
+                            User user2 = dataSnapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue(User.class);
+                            Picasso.get().load(user1.getPhoto()).into(imgAuteur);
+                            if (data.child("parcours").child(parcours.getId()).child("like").child(user2.getId()).getValue(String.class) != null) {
+                                like = true;
+                                thumbUp.setColorFilter(getResources().getColor(R.color.likeColor), PorterDuff.Mode.SRC_ATOP);
+                            } else if (data.child("parcours").child(parcours.getId()).child("dislike").child(user2.getId()).getValue(String.class) != null) {
+                                dislike = true;
+                                thumbDown.setColorFilter(getResources().getColor(R.color.likeColor), PorterDuff.Mode.SRC_ATOP);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    auteurCallback=true;
+                }
 
                 //Liste Point Interet
                 for(String ds : parcours.getListIdPointsInterets()){

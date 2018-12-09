@@ -34,7 +34,7 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
     protected FirebaseStorage mStorage;
     protected StorageReference storageReference;
     public static User user;
-    protected Object userMutex = new Object();
+    protected final Object userMutex = new Object();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,22 +43,20 @@ public class MereActivity extends AppCompatActivity implements NavigationView.On
         mWeziteboot = new WeziteBoot();
         mStorage = FirebaseStorage.getInstance();
         storageReference = mStorage.getReference();
-        if(user == null) {
-            mDatabase.child("users/").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+        mDatabase.child("users/"+FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
 
-                @Override
-                public void onDataChange(@NonNull DataSnapshot data) {
-                    synchronized (userMutex) {
-                        user = data.getValue(User.class);
-                        userMutex.notifyAll();
-                    }
+            @Override
+            public void onDataChange(@NonNull DataSnapshot data) {
+                synchronized (userMutex) {
+                    user = data.getValue(User.class);
+                    userMutex.notifyAll();
                 }
+            }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-                }
-            });
-        }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
     }
 
     @Override

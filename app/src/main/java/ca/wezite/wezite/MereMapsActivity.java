@@ -62,7 +62,27 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
     protected List<PointDinteret> pointDinteretList = new ArrayList<>();
     protected PointDinteret pointAPromite;
     private int layout;
-    protected LocationListener altListener;
+    protected LocationListener altListener = new LocationListener() {
+        @Override
+        public void onLocationChanged(Location location) {
+
+        }
+
+        @Override
+        public void onStatusChanged(String provider, int status, Bundle extras) {
+
+        }
+
+        @Override
+        public void onProviderEnabled(String provider) {
+
+        }
+
+        @Override
+        public void onProviderDisabled(String provider) {
+
+        }
+    };;
     protected boolean isListening = true;
 
     private boolean crashFlag=false;

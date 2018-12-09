@@ -11,4 +11,5 @@
     <color name="warningColor">#FFF664</color>
     <color name="overlayTitle">#C0333333</color>
     <color name="likeColor">#0284fe</color>
+    <color name="thumbColor">#717171</color>
 </resources>
