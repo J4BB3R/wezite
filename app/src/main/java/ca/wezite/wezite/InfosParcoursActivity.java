@@ -14,6 +14,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -39,14 +40,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import ca.wezite.wezite.async.DownloadImageTask;
 import ca.wezite.wezite.model.Parcours;
 import ca.wezite.wezite.model.User;
 import ca.wezite.wezite.utils.Constantes;
@@ -215,6 +221,8 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 TextView desc = findViewById(R.id.descParcour);
                 Switch sw = findViewById(R.id.switchB);
                 TextView auteur = findViewById(R.id.auteurText);
+
+                final ImageView imgParcour = findViewById(R.id.imageP);
                 final ImageView imgAuteur = findViewById(R.id.photoProfileAuteur);
                 final ImageButton thumbUp = findViewById(R.id.thumbUpParcour);
                 final ImageButton thumbDown = findViewById(R.id.thumbDownParcour);
@@ -233,6 +241,24 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 duree.setText(time);
 
                 auteur.setText(parcours.getNomCreateur());
+
+                try {
+                    StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images").child(parcours.getImgPath());
+                    storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            new DownloadImageTask(imgParcour)
+                                    .execute(uri.toString());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            // Handle any errors
+                        }
+                    });
+                } catch(Exception e){
+                    Log.e("ImageAsyncTask","ImgPath equals Null.");
+                }
 
                 if(!auteurCallback){
                     mDatabase.child("users/").addValueEventListener(new ValueEventListener() {
@@ -259,6 +285,7 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
                 }
 
                 //Liste Point Interet
+                lis.setText("");
                 for(String ds : parcours.getListIdPointsInterets()){
                     lis.setText(lis.getText() + "•  " + data.child("pointDInterets").child(ds).child("nom").getValue(String.class) + "\n");
                 }

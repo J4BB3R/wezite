@@ -150,6 +150,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
         mDatabase.child("parcours").addValueEventListener(new ValueEventListener() { //TODO Change filter
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                parcourListBuff.clear();
                 for (DataSnapshot noteSnapshot : dataSnapshot.getChildren()) {
                     parcourListBuff.add(noteSnapshot.getValue(Parcours.class));
                 }
@@ -170,6 +171,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
         String spinnerValue = Constantes.arraySpinner[spin.getSelectedItemPosition()];
         boolean check = Constantes.arraySpinner[0].equals(spinnerValue);
 
+        int count =0;
         for(Parcours par: parcourListBuff){
             if(spinnerValue.equals(par.getType())||check){
                 float[] distance = new float[1];
@@ -180,7 +182,7 @@ public class ParcoursListActivity extends MereActivity implements NavigationView
                 if(distance[0]<=simpleSeek.getProgress()*1000){
                     if(par.getDuree()/60 <= (dureeSeek.getProgress()+10)){
                         parcourList.add(par); //TODO trie par choix
-                        resulTxt.setText(mAdapter.getItemCount()+" Résultats"); //TODO Fix Page scroll
+                        resulTxt.setText(++count+" Résultats"); //TODO Fix Page scroll
                     }
                 }
             }
