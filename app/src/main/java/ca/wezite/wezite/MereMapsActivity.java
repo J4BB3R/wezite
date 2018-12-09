@@ -297,7 +297,7 @@ public class MereMapsActivity extends MereActivity implements OnMapReadyCallback
 
     @Override
     protected void onStop() {
-        super.onPause();
+        super.onStop();
         locationManager.removeUpdates(this);
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 3000, 5, altListener);
     }

@@ -157,7 +157,7 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                             final String imgPath = p.getUserId() + "-" +new Date();
                             StorageReference imgRef = storageReference.child("images/"+ imgPath);
                             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                            selectedImage.compress(Bitmap.CompressFormat.PNG, 50, baos);
+                            selectedImage.compress(Bitmap.CompressFormat.JPEG, 50, baos);
                             UploadTask uploadTask = imgRef.putBytes(baos.toByteArray());
                             uploadTask.addOnFailureListener(new OnFailureListener() {
                                 @Override
@@ -167,9 +167,9 @@ public class AjoutPointInteretActivity extends MereMapsActivity implements Navig
                             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    p.setImgPath(imgPath);
                                     pointsDInteretsCloudEndPoint.child(key).setValue(p);
                                     MereActivity.user.getListeIdPointsAjoutes().add(p.getId());
-                                    p.setImgPath(imgPath);
                                     mDatabase.child("users/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(MereActivity.user);
                                     selectedImage=null;
 

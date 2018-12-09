@@ -24,9 +24,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ca.wezite.wezite.async.DownloadImageTask;
+import ca.wezite.wezite.model.PointDinteret;
 import ca.wezite.wezite.model.User;
 
 
@@ -143,34 +145,42 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
                 final TextView tata = rowView.findViewById(R.id.descListProfil);
                 final TextView titi = rowView.findViewById(R.id.typeListProfil);
                 final ImageView tutu = rowView.findViewById(R.id.imageListProfil);
+                final List<String> pi = new ArrayList<>();
                 mDatabase.child(type).child(id).addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         if(tab == 2) {
                             toto.setText(dataSnapshot.child("nom").getValue(String.class));
-                            tutu.setImageDrawable(getResources().getDrawable(R.drawable.pi));
+                            pi.add(dataSnapshot.child("description").getValue(String.class));
+                            pi.add(dataSnapshot.child("nom").getValue(String.class));
+                            pi.add(dataSnapshot.child("auteur").getValue(String.class));
+                            pi.add(dataSnapshot.child("dateCreation").getValue(String.class));
+                            pi.add(dataSnapshot.child("nbVues").getValue(Long.class).toString());
+                            pi.add(dataSnapshot.child("imgPath").getValue(String.class));
+                            titi.setText("");
                         } else {
                             toto.setText(dataSnapshot.child("name").getValue(String.class));
                             titi.setText(dataSnapshot.child("type").getValue(String.class));
-                            try {
-                                StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images").child(dataSnapshot.child("imgPath").getValue(String.class));
-                                storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        new DownloadImageTask(tutu)
-                                                .execute(uri.toString());
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        // Handle any errors
-                                    }
-                                });
-                            } catch(Exception e){
-                                Log.e("ImageAsyncTask","ImgPath equals Null.");
-                            }
                         }
                         tata.setText(dataSnapshot.child("description").getValue(String.class));
+
+                        try {
+                            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("images").child(dataSnapshot.child("imgPath").getValue(String.class));
+                            storageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    new DownloadImageTask(tutu)
+                                            .execute(uri.toString());
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle any errors
+                                }
+                            });
+                        } catch(Exception e){
+                            Log.e("ImageAsyncTask","ImgPath equals Null.");
+                        }
 
                     }
 
@@ -188,7 +198,22 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
                             getApplicationContext().startActivity(intent);
                         }
                     });
+                } else {
+                    rowView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getApplicationContext(), InfosLieuActivity.class);
+                            intent.putExtra("description", pi.get(0));
+                            intent.putExtra("titre", pi.get(1));
+                            intent.putExtra("auteur", pi.get(2));
+                            intent.putExtra("dateCreation", pi.get(3));
+                            intent.putExtra("nbVues", pi.get(4));
+                            intent.putExtra("photo", pi.get(5));
+                            getApplicationContext().startActivity(intent);
+                        }
+                    });
                 }
+
                 listProfil.addView(rowView, listProfil.getChildCount() - 1);
             }
         }
