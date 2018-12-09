@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.GradientDrawable;
 import android.hardware.SensorManager;
 import android.location.Criteria;
 import android.location.Location;
@@ -175,6 +176,21 @@ public class InfosParcoursActivity extends MereActivity implements NavigationVie
         });
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        int or = getResources().getConfiguration().orientation;
+        if(or == Configuration.ORIENTATION_LANDSCAPE)
+        {
+            mMapFragment.setVisibility(View.GONE);
+            findViewById(R.id.imageP).setVisibility(View.GONE);
+        } else if(or == Configuration.ORIENTATION_PORTRAIT){
+            mMapFragment.setVisibility(View.VISIBLE);
+            findViewById(R.id.imageP).setVisibility(View.VISIBLE);
+        }
+    }
+
     public String timeStoHMS(double num){
 
         int hours = (int) num / 3600;

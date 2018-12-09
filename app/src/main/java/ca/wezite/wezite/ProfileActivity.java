@@ -74,10 +74,14 @@ public class ProfileActivity extends MereActivity implements NavigationView.OnNa
                     profil = dataSnapshot.getValue(User.class);
                     nom.setText(profil.getName());
                     mail.setText(profil.getEmail());
-                    Uri st = Uri.parse(profil.getPhoto());
-                    Picasso.get()
-                            .load(st)
-                            .into(img);
+                    try{
+                        Uri st = Uri.parse(profil.getPhoto());
+                        Picasso.get()
+                                .load(st)
+                                .into(img);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                     onAddField(0);
                 }
 
